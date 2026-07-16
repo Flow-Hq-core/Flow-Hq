@@ -99,67 +99,66 @@ const HeroCarousel = () => {
   const Visual = slide.Visual;
 
   return (
-    <section className="relative overflow-hidden border-b border-border pt-28 pb-8">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          {/* Copy */}
-          <div>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={slide.id}
-                initial={reduced ? false : { opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduced ? undefined : { opacity: 0, y: -8 }}
-                transition={{ duration: 0.35 }}
-              >
-                <p className="mb-4 text-sm font-semibold text-muted-foreground">{slide.eyebrow}</p>
+    <section className="relative flex min-h-[90vh] flex-col overflow-hidden border-b border-border">
+      {/* Full-bleed product UI backdrop — crops off the right edge */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={slide.id}
+            initial={reduced ? false : { opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={reduced ? undefined : { opacity: 0, scale: 0.99 }}
+            transition={{ duration: 0.45 }}
+            className="absolute right-0 top-1/2 w-[680px] max-w-none -translate-y-1/2 translate-x-[22%] sm:translate-x-[10%] lg:w-[840px] lg:translate-x-[8%] xl:translate-x-0"
+          >
+            <Visual />
+          </motion.div>
+        </AnimatePresence>
 
-                <h1 className="text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-                  {slide.headline.map((line, i) => (
-                    <span key={line} className="block">
-                      {i === slide.accentLine ? (
-                        <span className="text-primary">{line}</span>
-                      ) : (
-                        line
-                      )}
-                    </span>
-                  ))}
-                </h1>
+        {/* Legibility scrim: near-opaque on small screens where the copy sits
+            over the UI, easing off on wide ones where it doesn't. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background from-40% via-background/95 to-background/75 lg:from-30% lg:via-background/80 lg:to-transparent" />
+      </div>
 
-                <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">
-                  {slide.body}
-                </p>
+      {/* Copy */}
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pt-32">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={slide.id}
+            initial={reduced ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduced ? undefined : { opacity: 0, y: -8 }}
+            transition={{ duration: 0.35 }}
+            className="max-w-xl"
+          >
+            <p className="mb-4 text-sm font-semibold text-muted-foreground">{slide.eyebrow}</p>
 
-                <div className="mt-8">
-                  <Button size="lg" className="px-6 text-base shadow-flow-blue" asChild>
-                    <a href={slide.cta.href}>
-                      {slide.cta.label}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+            <h1 className="text-5xl font-bold leading-[0.95] tracking-tighter text-foreground sm:text-6xl lg:text-7xl">
+              {slide.headline.map((line, i) => (
+                <span key={line} className="block">
+                  {i === slide.accentLine ? <span className="text-primary">{line}</span> : line}
+                </span>
+              ))}
+            </h1>
 
-          {/* Product UI */}
-          <div className="lg:pl-8">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={slide.id}
-                initial={reduced ? false : { opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={reduced ? undefined : { opacity: 0, scale: 0.99 }}
-                transition={{ duration: 0.35 }}
-              >
-                <Visual />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
+            <p className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">
+              {slide.body}
+            </p>
 
-        {/* Card nav */}
-        <div className="mt-14 flex items-end gap-3">
+            <div className="mt-8">
+              <Button size="lg" className="px-6 text-base shadow-flow-blue" asChild>
+                <a href={slide.cta.href}>
+                  {slide.cta.label}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </a>
+              </Button>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Card nav — overlays the bottom of the hero */}
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl items-end gap-3 px-6 pb-10">
           <div
             role="tablist"
             aria-label="Flow products"
@@ -174,10 +173,10 @@ const HeroCarousel = () => {
                   aria-selected={isActive}
                   onClick={() => select(i)}
                   className={cn(
-                    "group relative overflow-hidden rounded-xl border px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                    "group relative overflow-hidden rounded-xl border px-4 py-3 text-left backdrop-blur transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                     isActive
                       ? "border-foreground bg-foreground text-background"
-                      : "border-border bg-background text-foreground hover:bg-muted/60"
+                      : "border-border bg-background/70 text-foreground hover:bg-background"
                   )}
                 >
                   <span className="flex items-center gap-2">
@@ -216,7 +215,7 @@ const HeroCarousel = () => {
             <button
               onClick={() => setPaused((p) => !p)}
               aria-label={paused ? "Play carousel" : "Pause carousel"}
-              className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:flex"
+              className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-background/70 text-muted-foreground backdrop-blur transition-colors hover:bg-background hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:flex"
             >
               {paused ? (
                 <Play className="h-4 w-4 fill-current" />
@@ -225,7 +224,6 @@ const HeroCarousel = () => {
               )}
             </button>
           )}
-        </div>
       </div>
     </section>
   );

@@ -35,9 +35,9 @@ export function ProjectsNav() {
           <Link href="/dashboard" className="hidden text-sm text-muted-foreground hover:text-foreground md:block">
             Back to app
           </Link>
-          <button className="rounded-xl border-[1.5px] border-foreground bg-foreground px-4 py-2 text-sm font-medium text-background shadow-[3px_3px_0_0_var(--primary)] transition-all hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--primary)]">
+          <Link href="/projects/new" className="rounded-xl border-[1.5px] border-foreground bg-foreground px-4 py-2 text-sm font-medium text-background shadow-[3px_3px_0_0_var(--primary)] transition-all hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--primary)]">
             Get started
-          </button>
+          </Link>
         </div>
       </div>
     </header>

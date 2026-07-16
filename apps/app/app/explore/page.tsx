@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { EXPLORE_CARDS } from "@flow-hq/shared";
 
 export default function ExplorePage() {
@@ -10,17 +11,16 @@ export default function ExplorePage() {
     >
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {EXPLORE_CARDS.map((card) => (
-          <Link
-            key={card.title}
-            href={card.href}
-            className="rounded-xl border border-border bg-card p-5 transition-shadow hover:shadow-flow-md"
-          >
-            <h2 className="text-base font-semibold text-foreground">{card.title}</h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.description}</p>
+          <Link key={card.title} href={card.href}>
+            <Card className="p-5 transition-shadow hover:shadow-flow-md">
+              <CardHeader className="p-0">
+                <CardTitle className="text-base">{card.title}</CardTitle>
+                <CardDescription className="leading-relaxed">{card.description}</CardDescription>
+              </CardHeader>
+            </Card>
           </Link>
         ))}
       </div>
     </AppShell>
   );
 }
-

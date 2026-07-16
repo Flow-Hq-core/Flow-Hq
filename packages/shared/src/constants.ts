@@ -16,6 +16,15 @@ export const ROADMAP_LINKS = [
   { href: "/roadmaps/data-engineering-flow", label: "Data Engineering · Flow", variant: "primary" }
 ] as const;
 
+export const ROADMAP_CATEGORIES = [
+  "Business",
+  "Data Engineering",
+  "Software Development",
+  "Marketing",
+  "Finance",
+  "Transport"
+] as const;
+
 export const MARKETING_NAV_LINKS = [
   { label: "Product", path: "/product" },
   { label: "Roadmap", path: "/roadmaps", appPath: true },
@@ -24,6 +33,53 @@ export const MARKETING_NAV_LINKS = [
   { label: "About", path: "/about" }
 ] as const;
 
+export type SidebarNavItem = {
+  href: string;
+  label: string;
+};
+
+export type SidebarNavGroup = {
+  label?: string;
+  items: readonly SidebarNavItem[];
+};
+
+export const SIDEBAR_NAV: readonly SidebarNavGroup[] = [
+  { items: [{ href: "/dashboard", label: "Dashboard" }, { href: "/explore", label: "Explore" }] },
+  {
+    label: "Build",
+    items: [
+      { href: "/roadmaps", label: "Roadmaps" },
+      { href: "/projects", label: "Projects" }
+    ]
+  },
+  {
+    label: "Learn",
+    items: [{ href: "/playlists", label: "Playlists" }]
+  },
+  {
+    label: "Intelligence",
+    items: [{ href: "/business-ai", label: "Business AI" }]
+  },
+  {
+    label: "Resources",
+    items: [{ href: "/templates", label: "Templates" }]
+  }
+] as const;
+
+export const SIDEBAR_FOOTER_NAV: readonly SidebarNavItem[] = [
+  { href: "/billing", label: "Billing" },
+  { href: "/settings", label: "Settings" }
+] as const;
+
+export const MOBILE_NAV: readonly SidebarNavItem[] = [
+  { href: "/dashboard", label: "Home" },
+  { href: "/explore", label: "Explore" },
+  { href: "/projects/new", label: "Create" },
+  { href: "/projects", label: "Projects" },
+  { href: "/settings/profile", label: "Profile" }
+] as const;
+
+/** @deprecated Use SIDEBAR_NAV for app navigation */
 export const PLATFORM_NAV = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/explore", label: "Explore" },
@@ -35,13 +91,28 @@ export const PLATFORM_NAV = [
   { href: "/billing", label: "Billing" }
 ] as const;
 
+export const SETTINGS_NAV: readonly SidebarNavItem[] = [
+  { href: "/settings/profile", label: "Profile" },
+  { href: "/settings/account", label: "Account" },
+  { href: "/settings/preferences", label: "Preferences" },
+  { href: "/settings/notifications", label: "Notifications" },
+  { href: "/settings/security", label: "Security" }
+] as const;
+
 export const EXPLORE_CARDS = [
   { title: "Business Roadmaps", href: "/roadmaps", description: "Explore Flow roadmap modules and execution views." },
-  { title: "Business AI", href: "/business-ai", description: "Future module prepared for AI workflows." },
-  { title: "Projects", href: "/projects", description: "AI-generated project roadmaps for software, hardware, and startups." },
-  { title: "Playlists", href: "/playlists", description: "Prepared placeholder for curated learning paths." },
-  { title: "Templates", href: "#", description: "Future reusable operating templates." },
-  { title: "Industries", href: "#", description: "Industry-specific roadmap collections." },
-  { title: "Popular", href: "#", description: "Frequently used modules and resources." },
-  { title: "Recent", href: "#", description: "Recently viewed platform areas." }
+  { title: "Business AI", href: "/business-ai", description: "AI business advisor for ideas, operations, and growth." },
+  { title: "Projects", href: "/projects", description: "Turn ideas and roadmap steps into execution plans." },
+  { title: "Playlists", href: "/playlists", description: "Curated learning paths tied to your roadmaps." },
+  { title: "Templates", href: "/templates", description: "Reusable business, project, and roadmap templates." },
+  { title: "Industries", href: "/explore?filter=industries", description: "Industry-specific roadmap collections." },
+  { title: "Popular", href: "/explore?filter=popular", description: "Frequently used modules and resources." },
+  { title: "Recent", href: "/explore?filter=recent", description: "Recently viewed platform areas." }
+] as const;
+
+export const PROJECT_TABS = [
+  { id: "active", label: "Active" },
+  { id: "completed", label: "Completed" },
+  { id: "templates", label: "Templates" },
+  { id: "archived", label: "Archived" }
 ] as const;

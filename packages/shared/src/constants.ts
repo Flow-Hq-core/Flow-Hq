@@ -2,6 +2,60 @@ export const APP_NAME = "Flow-HQ";
 export const MARKETING_URL = process.env.NEXT_PUBLIC_MARKETING_URL ?? "http://localhost:3000";
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3001";
 
+export type FlowProduct = {
+  /** Matches the module's route segment in apps/app. */
+  id: "roadmaps" | "projects" | "business-ai" | "playlists";
+  name: string;
+  tagline: string;
+  cta: string;
+  /** Deep link into the SaaS app, appended to APP_URL. */
+  appPath: string;
+  /** Marketing deep-dive page. */
+  marketingPath: string;
+};
+
+/**
+ * The four Flow products, in journey order: discover a path, execute it,
+ * get intelligence on it, learn what you're missing.
+ *
+ * Single source for the marketing Products dropdown, the homepage products
+ * overview, and the /products hub.
+ */
+export const FLOW_PRODUCTS: readonly FlowProduct[] = [
+  {
+    id: "roadmaps",
+    name: "Flow Roadmaps",
+    tagline: "Find the path from beginner to expert.",
+    cta: "Explore Roadmaps",
+    appPath: "/roadmaps",
+    marketingPath: "/products/roadmaps"
+  },
+  {
+    id: "projects",
+    name: "Flow Projects",
+    tagline: "Turn plans into execution.",
+    cta: "Create Project",
+    appPath: "/projects",
+    marketingPath: "/products/projects"
+  },
+  {
+    id: "business-ai",
+    name: "Flow Business AI",
+    tagline: "Analyze ideas and businesses.",
+    cta: "Try Business AI",
+    appPath: "/business-ai",
+    marketingPath: "/products/business-ai"
+  },
+  {
+    id: "playlists",
+    name: "Flow Playlists",
+    tagline: "Learn faster with curated paths.",
+    cta: "Explore Learning",
+    appPath: "/playlists",
+    marketingPath: "/products/playlists"
+  }
+] as const;
+
 export const DASHBOARD_QUICK_LINKS = [
   { href: "/explore", label: "Explore modules" },
   { href: "/roadmaps", label: "Open roadmaps" },

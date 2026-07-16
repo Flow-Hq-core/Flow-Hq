@@ -9,11 +9,8 @@ const Footer = () => {
             Flow<span className="text-primary">-HQ</span>
           </div>
           <div className="flex items-center gap-8 text-sm text-muted-foreground">
-            <Link href="/product" className="hover:text-foreground transition-colors">
-              Product
-            </Link>
-            <Link href="/#roadmap" className="hover:text-foreground transition-colors">
-              Roadmap
+            <Link href="/#products" className="hover:text-foreground transition-colors">
+              Products
             </Link>
             <Link href="/pricing" className="hover:text-foreground transition-colors">
               Pricing

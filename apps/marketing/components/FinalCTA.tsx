@@ -1,20 +1,24 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { APP_URL } from "@flow-hq/shared";
 
 const FinalCTA = () => {
   return (
-    <section className="py-24 bg-background">
-      <div className="max-w-3xl mx-auto px-6 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-          Stop executing fragments.{" "}
-          <span className="text-primary">Build the whole system.</span>
+    <section className="bg-background py-24">
+      <div className="mx-auto max-w-3xl px-6 text-center">
+        <h2 className="mb-4 text-3xl font-bold sm:text-4xl">
+          Your goals need a system.{" "}
+          <span className="text-primary">Start building with Flow.</span>
         </h2>
-        <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-          Flow-HQ gives you the structure, tools, and intelligence to build a business that actually works.
+        <p className="mx-auto mb-8 max-w-xl text-lg text-muted-foreground">
+          Find your path, turn it into work you can actually finish, and learn what you need
+          along the way.
         </p>
-        <Button size="lg" className="shadow-flow-blue text-base px-8">
-          Start Building with Flow
-          <ArrowRight className="ml-2 h-4 w-4" />
+        <Button size="lg" className="px-8 text-base shadow-flow-blue" asChild>
+          <a href={`${APP_URL}/explore`}>
+            Get Started
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </a>
         </Button>
       </div>
     </section>

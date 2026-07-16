@@ -1,53 +1,55 @@
-import { Layers, Puzzle, AlertTriangle } from "lucide-react";
+import { Compass, Lightbulb, Waves } from "lucide-react";
 
 const problems = [
   {
-    icon: Puzzle,
-    title: "Knowledge is fragmented",
-    description: "YouTube, courses, and podcasts give pieces — but never the full picture. You're assembling a puzzle without the box.",
+    icon: Lightbulb,
+    title: "Ideas, but no execution",
+    description:
+      "You know what you want to build. It stays a note in your phone because nothing turns it into actual work with actual steps."
   },
   {
-    icon: AlertTriangle,
-    title: "Tactics without structure fail",
-    description: "Running ads without positioning. Building funnels without offers. Executing without a system leads to wasted effort.",
+    icon: Compass,
+    title: "Goals, but no roadmap",
+    description:
+      "You can name the destination but not the path. So you guess at the order, skip what matters, and stall halfway."
   },
   {
-    icon: Layers,
-    title: "Businesses collapse at missing layers",
-    description: "A gap in operations, retention, or finance can quietly erode what you've built. Most founders don't see it until it's too late.",
-  },
+    icon: Waves,
+    title: "Information, but no direction",
+    description:
+      "Endless courses, threads, and videos. Plenty of input, no sequence — you're collecting pieces without a picture."
+  }
 ];
 
 const ProblemSection = () => {
   return (
-    <section className="py-24 bg-background">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-            Most founders execute tactics.{" "}
-            <span className="text-primary">Few build systems.</span>
+    <section className="bg-muted/30 py-24">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="mx-auto mb-16 max-w-2xl text-center">
+          <h2 className="text-3xl font-bold sm:text-4xl">
+            The gap isn&rsquo;t effort. <span className="text-primary">It&rsquo;s structure.</span>
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {problems.map((p, i) => (
+        <div className="mb-16 grid gap-8 md:grid-cols-3">
+          {problems.map((p) => (
             <div
-              key={i}
-              className="rounded-xl border border-border p-6 gradient-card hover:shadow-flow-md transition-shadow"
+              key={p.title}
+              className="rounded-xl border border-border bg-background p-6 transition-shadow hover:shadow-flow-md"
             >
-              <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center mb-4">
-                <p.icon className="w-5 h-5 text-primary" />
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
+                <p.icon className="h-5 w-5 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-foreground">{p.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{p.description}</p>
+              <h3 className="mb-2 text-lg font-semibold text-foreground">{p.title}</h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">{p.description}</p>
             </div>
           ))}
         </div>
 
         <div className="text-center">
           <p className="text-lg font-medium text-foreground">
-            Flow fixes this by{" "}
-            <span className="text-primary font-semibold">enforcing completeness</span>.
+            Flow closes it by connecting{" "}
+            <span className="font-semibold text-primary">every step to the next one</span>.
           </p>
         </div>
       </div>

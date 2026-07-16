@@ -1,9 +1,9 @@
-import HeroSection from "@/components/HeroSection";
+import HeroCarousel from "@/components/hero/HeroCarousel";
 import ProblemSection from "@/components/ProblemSection";
-import HowItWorks from "@/components/HowItWorks";
-import RoadmapSection from "@/components/RoadmapSection";
-import ExecutionEngine from "@/components/ExecutionEngine";
-import IntelligenceLayer from "@/components/IntelligenceLayer";
+import HowFlowWorks from "@/components/HowFlowWorks";
+import ProductsOverview from "@/components/ProductsOverview";
+import WhyFlow from "@/components/WhyFlow";
+import UseCases from "@/components/UseCases";
 import PricingSection from "@/components/PricingSection";
 import FinalCTA from "@/components/FinalCTA";
 import MarketingShell from "@/components/MarketingShell";
@@ -11,12 +11,12 @@ import MarketingShell from "@/components/MarketingShell";
 export default function HomePage() {
   return (
     <MarketingShell>
-      <HeroSection />
+      <HeroCarousel />
       <ProblemSection />
-      <HowItWorks />
-      <RoadmapSection />
-      <ExecutionEngine />
-      <IntelligenceLayer />
+      <HowFlowWorks />
+      <ProductsOverview />
+      <WhyFlow />
+      <UseCases />
       <PricingSection />
       <FinalCTA />
     </MarketingShell>

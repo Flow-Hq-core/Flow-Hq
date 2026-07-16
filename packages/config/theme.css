@@ -1,0 +1,118 @@
+/**
+ * Flow-HQ — centralized design tokens (DRAFT: minimalist system)
+ * ---------------------------------------------------------------
+ * Single source of truth for both apps. This file is NOT wired yet.
+ *
+ * To adopt (after design sign-off):
+ *   1. Add to packages/config/package.json exports:
+ *        "./theme.css": "./theme.css"
+ *   2. In apps/marketing/app/globals.css AND apps/app/app/globals.css,
+ *      replace the copy-pasted :root {…} block with:
+ *        @import "@flow-hq/config/theme.css";
+ *   3. Delete the neumorphism + gradient utilities from marketing globals.css
+ *      (.neu-*, .gradient-*) — the minimal system doesn't use them.
+ *
+ * Variable NAMES are unchanged from today, so the Tailwind preset and every
+ * existing `bg-primary` / `text-muted-foreground` / `shadow-flow-md` class
+ * keeps working. Only the VALUES change.
+ *
+ * Design direction: minimalist everywhere. Neutral (faintly cool) grays,
+ * hairline borders, tight radius, restrained elevation. Blue is the single
+ * accent, used sparingly. No gradients, no neumorphism.
+ */
+
+:root {
+  /* Surfaces & ink -------------------------------------------------------- */
+  --background: 0 0% 100%;
+  --foreground: 220 9% 11%;          /* was 220 20% 14% — neutral, not blue-gray */
+
+  --card: 0 0% 100%;
+  --card-foreground: 220 9% 11%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 9% 11%;
+
+  /* Accent (the one color) ----------------------------------------------- */
+  --primary: 221 83% 53%;            /* blue, retained as brand accent */
+  --primary-foreground: 0 0% 100%;
+
+  /* Neutrals — secondary / muted / accent all read as gray now ----------- */
+  --secondary: 220 14% 96%;          /* was light blue 214 95% 93% */
+  --secondary-foreground: 220 9% 11%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 6% 44%;    /* was 220 10% 46% — desaturated */
+  --accent: 220 14% 96%;             /* was light blue — now neutral hover */
+  --accent-foreground: 220 9% 11%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* Hairlines ------------------------------------------------------------ */
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 221 83% 53%;
+
+  /* Radius — tighter, sharper ------------------------------------------- */
+  --radius: 0.5rem;                  /* was 0.625rem */
+
+  /* Accent scale (blue) — links, highlights, focus ---------------------- */
+  --flow-blue-50: 214 100% 97%;
+  --flow-blue-100: 214 95% 93%;
+  --flow-blue-200: 213 97% 87%;
+  --flow-blue-500: 221 83% 53%;
+  --flow-blue-600: 221 83% 45%;
+  --flow-blue-700: 224 76% 38%;
+  --flow-blue-900: 222 47% 20%;
+
+  /* Neutral scale — true cool-neutral gray (was blue-tinted) ------------- */
+  --flow-gray-50: 220 20% 98%;
+  --flow-gray-100: 220 16% 96%;
+  --flow-gray-200: 220 13% 91%;
+  --flow-gray-400: 220 9% 64%;
+  --flow-gray-500: 220 6% 44%;
+  --flow-gray-600: 220 8% 33%;
+  --flow-gray-700: 220 9% 24%;
+  --flow-gray-800: 220 10% 16%;
+  --flow-gray-900: 220 9% 11%;
+
+  /* Elevation — one restrained system, no colored/neumorphic shadows ----- */
+  --shadow-sm: 0 1px 2px 0 hsl(220 20% 14% / 0.05);
+  --shadow-md: 0 1px 3px 0 hsl(220 20% 14% / 0.06), 0 1px 2px -1px hsl(220 20% 14% / 0.06);
+  --shadow-lg: 0 4px 16px -4px hsl(220 20% 14% / 0.10);
+  --shadow-blue: 0 1px 2px 0 hsl(220 20% 14% / 0.06); /* neutralized; kept for class compat */
+
+  /* Sidebar (app shell) — neutralized to match --------------------------- */
+  --sidebar-background: 220 20% 99%;
+  --sidebar-foreground: 220 9% 24%;
+  --sidebar-primary: 221 83% 53%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 220 14% 96%;
+  --sidebar-accent-foreground: 220 9% 11%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 221 83% 53%;
+}
+
+/**
+ * Optional dark mode scaffold (deferred). The Tailwind preset already sets
+ * darkMode: "class", so a `.dark` class on <html> flips these. Kept minimal
+ * and neutral; refine when/if dark surfaces are needed.
+ */
+.dark {
+  --background: 220 14% 8%;
+  --foreground: 220 14% 96%;
+  --card: 220 13% 10%;
+  --card-foreground: 220 14% 96%;
+  --popover: 220 13% 10%;
+  --popover-foreground: 220 14% 96%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 220 14% 8%;
+  --secondary: 220 12% 16%;
+  --secondary-foreground: 220 14% 96%;
+  --muted: 220 12% 16%;
+  --muted-foreground: 220 8% 60%;
+  --accent: 220 12% 16%;
+  --accent-foreground: 220 14% 96%;
+  --border: 220 12% 18%;
+  --input: 220 12% 18%;
+  --ring: 217 91% 60%;
+}

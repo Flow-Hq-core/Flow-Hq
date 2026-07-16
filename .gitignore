@@ -1,0 +1,12 @@
+node_modules
+.next
+.turbo
+dist
+coverage
+.env
+.env.*
+.DS_Store
+temp/
+.cache/
+.pnpm-store/
+

@@ -1,0 +1,17 @@
+{
+  "name": "@flow-hq/config",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./eslint/base": "./eslint/base.js",
+    "./prettier": "./prettier.config.js",
+    "./tailwind": "./tailwind/preset.ts",
+    "./typescript/base": "./typescript/base.json",
+    "./typescript/nextjs": "./typescript/nextjs.json"
+  },
+  "devDependencies": {
+    "tailwindcss": "latest",
+    "typescript": "^5.7.2"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "flow-hq",
+  "private": true,
+  "packageManager": "pnpm@11.10.0",
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.9.5",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  }
+}

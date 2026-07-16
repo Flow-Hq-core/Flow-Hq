@@ -1,0 +1,85 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap");
+
+.projects-theme {
+  --ink: hsl(220 20% 14%);
+  --surface: hsl(0 0% 100%);
+  --hairline: hsl(216 20% 90%);
+}
+
+.projects-theme .font-display {
+  font-family: "Instrument Serif", ui-serif, Georgia, serif;
+}
+
+.projects-theme .font-mono {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+}
+
+.projects-theme .grid-bg {
+  background-image:
+    linear-gradient(to right, hsl(220 20% 14% / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(220 20% 14% / 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.projects-theme .hairline {
+  border-color: var(--hairline);
+}
+
+.projects-theme .bg-surface {
+  background: var(--surface);
+}
+
+.projects-theme .brutal-card {
+  background: var(--surface);
+  border: 1.5px solid var(--ink);
+  border-radius: 1.25rem;
+  box-shadow: 4px 4px 0 0 var(--ink);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.projects-theme .brutal-card-hover:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--ink);
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.projects-theme .animate-float {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+.projects-theme .animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+.projects-theme .animate-glow {
+  animation: shimmer-glow 5s ease-in-out infinite;
+}

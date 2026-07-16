@@ -1,0 +1,22 @@
+{
+  "name": "@flow-hq/shared",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./constants": "./src/constants.ts",
+    "./types": "./src/types.ts",
+    "./hooks/use-mobile": "./src/hooks/use-mobile.tsx"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/react": "latest",
+    "typescript": "^5.7.2"
+  }
+}

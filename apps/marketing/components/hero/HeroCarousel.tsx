@@ -99,9 +99,12 @@ const HeroCarousel = () => {
   const Visual = slide.Visual;
 
   return (
-    <section className="relative flex min-h-[90vh] flex-col overflow-hidden border-b border-border">
+    <section className="relative flex min-h-[90vh] flex-col overflow-hidden">
       {/* Full-bleed product UI backdrop — crops off the right edge */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
+        {/* Ambient ground — sits behind the UI so it isn't floating on flat white */}
+        <div className="absolute inset-0 bg-[radial-gradient(55%_55%_at_72%_45%,hsl(214_95%_96%),transparent_70%)]" />
+
         <AnimatePresence mode="wait">
           <motion.div
             key={slide.id}
@@ -158,7 +161,7 @@ const HeroCarousel = () => {
       </div>
 
       {/* Card nav — overlays the bottom of the hero */}
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl items-end gap-3 px-6 pb-10">
+      <div className="relative z-10 mx-auto mt-10 flex w-full max-w-7xl items-end gap-3 px-6 pb-5">
           <div
             role="tablist"
             aria-label="Flow products"

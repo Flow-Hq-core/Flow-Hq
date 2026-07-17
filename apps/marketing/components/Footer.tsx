@@ -8,14 +8,23 @@ const Footer = () => {
           <div className="text-lg font-bold text-foreground tracking-tight">
             Flow<span className="text-primary">-HQ</span>
           </div>
-          <div className="flex items-center gap-8 text-sm text-muted-foreground">
-            <Link href="/#products" className="hover:text-foreground transition-colors">
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground">
+            <Link href="/products" className="transition-colors hover:text-foreground">
               Products
             </Link>
-            <Link href="/pricing" className="hover:text-foreground transition-colors">
+            <Link href="/use-cases" className="transition-colors hover:text-foreground">
+              Use Cases
+            </Link>
+            <Link href="/solutions" className="transition-colors hover:text-foreground">
+              Solutions
+            </Link>
+            <Link href="/resources" className="transition-colors hover:text-foreground">
+              Resources
+            </Link>
+            <Link href="/pricing" className="transition-colors hover:text-foreground">
               Pricing
             </Link>
-            <Link href="/about" className="hover:text-foreground transition-colors">
+            <Link href="/about" className="transition-colors hover:text-foreground">
               About
             </Link>
           </div>

@@ -472,45 +472,45 @@ export const MARKETING_NAV: readonly MarketingNavItem[] = [
   { label: "About", kind: "link", path: "/about" }
 ] as const;
 
-export type SidebarNavItem = {
+export type AppNavItem = {
   href: string;
   label: string;
 };
 
-export type SidebarNavGroup = {
-  label?: string;
-  items: readonly SidebarNavItem[];
-};
-
-export const SIDEBAR_NAV: readonly SidebarNavGroup[] = [
-  { items: [{ href: "/dashboard", label: "Dashboard" }, { href: "/explore", label: "Explore" }] },
-  {
-    label: "Build",
-    items: [
-      { href: "/roadmaps", label: "Roadmaps" },
-      { href: "/projects", label: "Projects" }
-    ]
-  },
-  {
-    label: "Learn",
-    items: [{ href: "/playlists", label: "Playlists" }]
-  },
-  {
-    label: "Intelligence",
-    items: [{ href: "/business-ai", label: "Business AI" }]
-  },
-  {
-    label: "Resources",
-    items: [{ href: "/templates", label: "Templates" }]
-  }
+/**
+ * The app's primary nav, rendered as a horizontal bar in the header.
+ *
+ * These are the places you go to *do* something, which is why the list is
+ * flat: the sidebar's Build/Learn/Intelligence grouping was a way to fill
+ * vertical space, and a horizontal bar has none to fill. Six destinations is
+ * already the ceiling — anything more belongs behind Explore.
+ *
+ * Dashboard is deliberately absent. It's where you review your own state, not
+ * a product surface, so it lives in the account menu with the rest of "your
+ * stuff" — see ACCOUNT_MENU.
+ */
+export const APP_NAV: readonly AppNavItem[] = [
+  { href: "/explore", label: "Explore" },
+  { href: "/roadmaps", label: "Roadmaps" },
+  { href: "/projects", label: "Projects" },
+  { href: "/business-ai", label: "Business AI" },
+  { href: "/playlists", label: "Playlists" },
+  { href: "/templates", label: "Templates" }
 ] as const;
 
-export const SIDEBAR_FOOTER_NAV: readonly SidebarNavItem[] = [
-  { href: "/billing", label: "Billing" },
-  { href: "/settings", label: "Settings" }
+/**
+ * The avatar dropdown: everything scoped to *you* rather than to the work.
+ * Dashboard leads because it's the most-visited of these, not because it's a
+ * settings screen.
+ */
+export const ACCOUNT_MENU: readonly AppNavItem[] = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/settings/profile", label: "Profile" },
+  { href: "/settings", label: "Settings" },
+  { href: "/billing", label: "Billing" }
 ] as const;
 
-export const MOBILE_NAV: readonly SidebarNavItem[] = [
+export const MOBILE_NAV: readonly AppNavItem[] = [
   { href: "/dashboard", label: "Home" },
   { href: "/explore", label: "Explore" },
   { href: "/projects/new", label: "Create" },
@@ -518,7 +518,7 @@ export const MOBILE_NAV: readonly SidebarNavItem[] = [
   { href: "/settings/profile", label: "Profile" }
 ] as const;
 
-/** @deprecated Use SIDEBAR_NAV for app navigation */
+/** @deprecated Use APP_NAV for app navigation */
 export const PLATFORM_NAV = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/explore", label: "Explore" },
@@ -530,7 +530,7 @@ export const PLATFORM_NAV = [
   { href: "/billing", label: "Billing" }
 ] as const;
 
-export const SETTINGS_NAV: readonly SidebarNavItem[] = [
+export const SETTINGS_NAV: readonly AppNavItem[] = [
   { href: "/settings/profile", label: "Profile" },
   { href: "/settings/account", label: "Account" },
   { href: "/settings/preferences", label: "Preferences" },

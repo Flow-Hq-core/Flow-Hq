@@ -182,20 +182,22 @@ const HeroCarousel = () => {
                       : "border-border bg-background/70 text-foreground hover:bg-background"
                   )}
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex flex-col gap-2.5">
                     <s.icon
                       className={cn(
-                        "h-4 w-4 shrink-0",
+                        "h-5 w-5 shrink-0",
                         isActive ? "text-background" : "text-primary"
                       )}
                     />
-                    <span className="flex-1 truncate text-sm font-semibold">{s.card}</span>
-                    <ChevronRight
-                      className={cn(
-                        "h-3.5 w-3.5 shrink-0 transition-transform group-hover:translate-x-0.5",
-                        isActive ? "text-background/70" : "text-muted-foreground"
-                      )}
-                    />
+                    <span className="flex items-center gap-2">
+                      <span className="flex-1 truncate text-sm font-semibold">{s.card}</span>
+                      <ChevronRight
+                        className={cn(
+                          "h-3.5 w-3.5 shrink-0 transition-transform group-hover:translate-x-0.5",
+                          isActive ? "text-background/70" : "text-muted-foreground"
+                        )}
+                      />
+                    </span>
                   </span>
 
                   {/* Autoplay timer */}

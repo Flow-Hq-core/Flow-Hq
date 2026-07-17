@@ -1,51 +1,120 @@
 import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ROADMAP_CATEGORIES, ROADMAP_LINKS } from "@flow-hq/shared";
+import { ROADMAP_CATEGORIES, ROADMAP_LINKS, type RoadmapLink } from "@flow-hq/shared";
+
+function RoadmapCard({ roadmap }: { roadmap: RoadmapLink }) {
+  return (
+    <Link href={roadmap.href}>
+      <Card className="h-full p-5 transition-shadow hover:shadow-flow-md">
+        <CardHeader className="p-0">
+          <div className="mb-1.5 flex items-center gap-2">
+            <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+              {roadmap.category}
+            </span>
+            <span className="text-xs text-muted-foreground">{roadmap.level}</span>
+          </div>
+          <CardTitle className="text-base">{roadmap.label}</CardTitle>
+          <CardDescription className="leading-relaxed">{roadmap.description}</CardDescription>
+        </CardHeader>
+
+        {roadmap.progress !== undefined && (
+          <div className="mt-4 flex items-center gap-2">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full bg-primary"
+                style={{ width: `${roadmap.progress}%` }}
+              />
+            </div>
+            <span className="text-xs text-muted-foreground">{roadmap.progress}%</span>
+          </div>
+        )}
+      </Card>
+    </Link>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="mb-10">
+      <h2 className="mb-4 text-lg font-semibold">{title}</h2>
+      {children}
+    </section>
+  );
+}
 
 export default function RoadmapsPage() {
+  const featured = ROADMAP_LINKS.filter((r) => r.featured);
+  const popular = ROADMAP_LINKS.filter((r) => r.popular);
+  const mine = ROADMAP_LINKS.filter((r) => r.progress !== undefined);
+
   return (
     <AppShell
-      title="Roadmaps"
-      description="Browse paths from beginner to advanced. Every milestone can become a project."
+      title="Find your path."
+      description="Structured routes from where you are to where you're going. Every milestone can become a project."
     >
-      <div className="mb-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Categories</h2>
+      <Section title="Categories">
         <div className="flex flex-wrap gap-2">
-          {ROADMAP_CATEGORIES.map((category) => (
-            <span
-              key={category}
-              className="rounded-full border border-border bg-muted px-3 py-1 text-sm text-muted-foreground"
-            >
-              {category}
-            </span>
+          {ROADMAP_CATEGORIES.map((category) => {
+            const count = ROADMAP_LINKS.filter((r) => r.category === category).length;
+            return (
+              <span
+                key={category}
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3.5 py-1.5 text-sm text-foreground"
+              >
+                {category}
+                <span className="text-xs text-muted-foreground">{count > 0 ? count : "Soon"}</span>
+              </span>
+            );
+          })}
+        </div>
+      </Section>
+
+      <Section title="Featured roadmaps">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((r) => (
+            <RoadmapCard key={r.href} roadmap={r} />
           ))}
         </div>
-      </div>
+      </Section>
 
-      <div className="mb-6 flex flex-wrap gap-3">
+      <Section title="Popular roadmaps">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {popular.map((r) => (
+            <RoadmapCard key={r.href} roadmap={r} />
+          ))}
+        </div>
+      </Section>
+
+      <Section title="My roadmaps">
+        {mine.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {mine.map((r) => (
+              <RoadmapCard key={r.href} roadmap={r} />
+            ))}
+          </div>
+        ) : (
+          <Card className="border-dashed p-6">
+            <CardHeader className="p-0">
+              <CardTitle className="text-base text-muted-foreground">
+                No roadmaps started yet
+              </CardTitle>
+              <CardDescription>
+                Start one and it&rsquo;ll show up here with your progress.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        )}
+      </Section>
+
+      <div className="flex flex-wrap gap-3 border-t border-border pt-6">
         <Button asChild>
-          <Link href="/roadmaps/business-101">Start Roadmap</Link>
+          <Link href="/roadmaps/business-101">Start a roadmap</Link>
         </Button>
         <Button variant="outline" asChild>
-          <Link href="/projects/new">Create Project</Link>
+          <Link href="/explore">Browse everything</Link>
         </Button>
-      </div>
-
-      <div className="flex flex-wrap gap-3">
-        {ROADMAP_LINKS.map((roadmap) => (
-          <Link
-            key={roadmap.href}
-            href={roadmap.href}
-            className={
-              roadmap.variant === "primary"
-                ? "inline-flex h-11 items-center justify-center rounded-md border border-primary/30 bg-primary px-6 text-sm font-medium text-primary-foreground shadow-flow-blue transition-colors hover:bg-flow-600"
-                : "inline-flex h-11 items-center justify-center rounded-md border border-slate-800 bg-slate-950 px-6 text-sm font-medium text-slate-50 shadow-md transition-colors hover:border-slate-700 hover:bg-slate-900"
-            }
-          >
-            {roadmap.label}
-          </Link>
-        ))}
       </div>
     </AppShell>
   );

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Bell, Search } from "lucide-react";
+import { Bell } from "lucide-react";
 import { APP_NAME } from "@flow-hq/shared";
 import { Button } from "@/components/ui/button";
 import { AccountMenu } from "@/components/account-menu";
@@ -28,18 +28,7 @@ export function AppShell({
 
           <AppNav />
 
-          {/* Search takes the slack between nav and actions, so it shrinks
-              first on narrow viewports instead of pushing the nav off. */}
-          <div className="ml-auto flex min-w-0 items-center gap-2">
-            <div className="relative hidden w-full min-w-0 max-w-xs sm:block">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="search"
-                placeholder="Search roadmaps, projects, playlists…"
-                className="h-9 w-full rounded-lg border border-input bg-background pl-9 pr-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
-              />
-            </div>
-
+          <div className="ml-auto flex items-center gap-2">
             <Button variant="ghost" size="icon" aria-label="Notifications">
               <Bell className="h-4 w-4" />
             </Button>

@@ -538,6 +538,10 @@ export const SETTINGS_NAV: readonly AppNavItem[] = [
   { href: "/settings/security", label: "Security" }
 ] as const;
 
+/**
+ * @deprecated The flat card grid was replaced by EXPLORE_ROWS — one row per
+ * product, Higgsfield-style. Kept only until nothing imports it.
+ */
 export const EXPLORE_CARDS = [
   { title: "Business Roadmaps", href: "/roadmaps", description: "Explore Flow roadmap modules and execution views." },
   { title: "Business AI", href: "/business-ai", description: "AI business advisor for ideas, operations, and growth." },
@@ -547,6 +551,134 @@ export const EXPLORE_CARDS = [
   { title: "Industries", href: "/explore?filter=industries", description: "Industry-specific roadmap collections." },
   { title: "Popular", href: "/explore?filter=popular", description: "Frequently used modules and resources." },
   { title: "Recent", href: "/explore?filter=recent", description: "Recently viewed platform areas." }
+] as const;
+
+export type ExploreCard = {
+  title: string;
+  description: string;
+  href: string;
+  /** Small line under the description, e.g. "7 lessons · Business". */
+  meta?: string;
+  /** Optional pill above the title, e.g. a level or "New". */
+  badge?: string;
+};
+
+export type ExploreRow = {
+  /** Matches a FlowProduct id so the page can pick the product's icon. */
+  id: FlowProduct["id"];
+  title: string;
+  subtitle: string;
+  /** "See all" destination — the product's own surface. */
+  href: string;
+  cards: readonly ExploreCard[];
+};
+
+/**
+ * Explore, one row per product (the Higgsfield pattern: each row is a single
+ * product, its cards scrolling horizontally).
+ *
+ * The cards are not invented for this page — they're the same seed content
+ * each product surface already shows: roadmaps come straight from
+ * ROADMAP_LINKS; the other three mirror the starter sets on their own pages.
+ * When those move to @flow-hq/database, this becomes a query, but the shape
+ * stays the same.
+ */
+export const EXPLORE_ROWS: readonly ExploreRow[] = [
+  {
+    id: "roadmaps",
+    title: "Roadmaps",
+    subtitle: "Structured routes from beginner to expert.",
+    href: "/roadmaps",
+    cards: ROADMAP_LINKS.map((r) => ({
+      title: r.label,
+      description: r.description,
+      href: r.href,
+      badge: r.level,
+      meta: r.category
+    }))
+  },
+  {
+    id: "business-ai",
+    title: "Business AI",
+    subtitle: "Point it at an idea or a running business.",
+    href: "/business-ai",
+    cards: [
+      {
+        title: "Business idea",
+        description: "Pressure-test an idea before you commit to building it.",
+        href: "/business-ai"
+      },
+      {
+        title: "Existing business",
+        description: "Diagnose what's holding a running business back.",
+        href: "/business-ai"
+      },
+      {
+        title: "Marketing",
+        description: "Positioning, messaging, and channel performance.",
+        href: "/business-ai"
+      },
+      {
+        title: "Operations",
+        description: "Workflows, bottlenecks, and what to automate.",
+        href: "/business-ai"
+      },
+      {
+        title: "Competition",
+        description: "Where you sit in the field and where you blend in.",
+        href: "/business-ai"
+      }
+    ]
+  },
+  {
+    id: "projects",
+    title: "Projects",
+    subtitle: "Turn a plan into work you can actually run.",
+    href: "/projects",
+    cards: [
+      {
+        title: "Product launch",
+        description: "Spec to launch checklist.",
+        href: "/projects/new"
+      },
+      {
+        title: "Market research",
+        description: "ICP, competitors, demand signals.",
+        href: "/projects/new"
+      },
+      {
+        title: "Hiring plan",
+        description: "Roles, sequence, and onboarding.",
+        href: "/projects/new"
+      }
+    ]
+  },
+  {
+    id: "playlists",
+    title: "Playlists",
+    subtitle: "Learn in order, tied to the gaps in your work.",
+    href: "/playlists",
+    cards: [
+      {
+        title: "Positioning Mastery",
+        description: "Find the wedge, tell the story, test it.",
+        href: "/playlists/positioning-mastery",
+        meta: "7 lessons · Business"
+      },
+      {
+        title: "Python Mastery",
+        description: "From syntax to shipping real tools.",
+        href: "/playlists/python-mastery",
+        meta: "24 lessons · Technology"
+      },
+      {
+        title: "Unit Economics",
+        description: "Know whether the business actually works.",
+        href: "/playlists/unit-economics",
+        meta: "9 lessons · Business"
+      }
+    ]
+  }
 ] as const;
 
 /**

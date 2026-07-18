@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Brain, FolderKanban, GraduationCap, Map } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
+import { ExploreCover } from "@/components/explore/explore-cover";
 import { EXPLORE_ROWS, type ExploreCard, type ExploreRow } from "@flow-hq/shared";
 import { cn } from "@/lib/utils";
 
@@ -11,24 +12,32 @@ const ROW_ICONS = {
   playlists: GraduationCap
 } as const;
 
-function Card({ card }: { card: ExploreCard }) {
+function Card({ card, rowId, index }: { card: ExploreCard; rowId: ExploreRow["id"]; index: number }) {
   return (
     <Link
       href={card.href}
-      className="group flex w-64 shrink-0 snap-start flex-col rounded-2xl border border-border bg-background p-5 transition-shadow hover:shadow-flow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-72"
+      className="group flex w-72 shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-border bg-background transition-shadow hover:shadow-flow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-80"
     >
-      {card.badge && (
-        <span className="mb-3 w-fit rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-          {card.badge}
-        </span>
-      )}
-      <h3 className="text-base font-semibold text-foreground">{card.title}</h3>
-      <p className="mt-1.5 flex-1 text-sm leading-relaxed text-muted-foreground">
-        {card.description}
-      </p>
-      {card.meta && (
-        <p className="mt-4 text-xs font-medium text-muted-foreground">{card.meta}</p>
-      )}
+      <div className="overflow-hidden border-b border-border">
+        <div className="transition-transform duration-500 group-hover:scale-[1.04]">
+          <ExploreCover id={rowId} index={index} />
+        </div>
+      </div>
+
+      <div className="flex flex-1 flex-col p-5">
+        {card.badge && (
+          <span className="mb-2 w-fit rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+            {card.badge}
+          </span>
+        )}
+        <h3 className="text-base font-semibold text-foreground">{card.title}</h3>
+        <p className="mt-1.5 flex-1 text-sm leading-relaxed text-muted-foreground">
+          {card.description}
+        </p>
+        {card.meta && (
+          <p className="mt-4 text-xs font-medium text-muted-foreground">{card.meta}</p>
+        )}
+      </div>
     </Link>
   );
 }
@@ -65,8 +74,8 @@ function Row({ row }: { row: ExploreRow }) {
           "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         )}
       >
-        {row.cards.map((card) => (
-          <Card key={`${row.id}-${card.title}`} card={card} />
+        {row.cards.map((card, i) => (
+          <Card key={`${row.id}-${card.title}`} card={card} rowId={row.id} index={i} />
         ))}
       </div>
     </section>

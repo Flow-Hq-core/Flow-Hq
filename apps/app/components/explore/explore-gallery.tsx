@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Brain, FolderKanban, GraduationCap, Map } from "lucide-react";
 import { ExploreCover } from "@/components/explore/explore-cover";
@@ -83,7 +83,7 @@ function ItemTile({
   return (
     <Link
       href={card.href}
-      className="group relative aspect-[16/10] w-72 shrink-0 snap-start overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-flow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-80"
+      className="group relative aspect-video w-80 shrink-0 snap-start overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-flow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-96"
     >
       <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.05]">
         <MediaLayer rowId={rowId} index={index} video={card.video} image={card.image} />
@@ -102,7 +102,7 @@ function FeaturedCard({ tile, index }: { tile: FeaturedTile; index: number }) {
   return (
     <Link
       href={tile.href}
-      className="group relative aspect-[16/9] w-80 shrink-0 snap-start overflow-hidden rounded-3xl border border-border bg-card transition-shadow hover:shadow-flow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-[26rem]"
+      className="group relative aspect-video w-[22rem] shrink-0 snap-start overflow-hidden rounded-3xl border border-border bg-card transition-shadow hover:shadow-flow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-[30rem]"
     >
       <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.05]">
         <MediaLayer rowId={tile.id} index={index} video={tile.video} image={tile.image} />
@@ -120,6 +120,75 @@ function FeaturedCard({ tile, index }: { tile: FeaturedTile; index: number }) {
         </span>
       </div>
     </Link>
+  );
+}
+
+type Band = {
+  /** Rendered after the section at this index in the full (unfiltered) list. */
+  afterIndex: number;
+  eyebrow: string;
+  title: string;
+  body: string;
+  cta: { label: string; href: string };
+  glow: string;
+};
+
+/**
+ * Full-width bands interleaved between the product rows, giving the reference's
+ * content -> band -> content rhythm. Deliberately connective (the ecosystem and
+ * onboarding), not ads for the product whose row sits next to them — that would
+ * just be redundant.
+ */
+const FEATURE_BANDS: Band[] = [
+  {
+    afterIndex: 0,
+    eyebrow: "One system",
+    title: "Your progress carries between products.",
+    body: "Finish a playlist, complete a roadmap step, ship a project — it all updates the same picture.",
+    cta: { label: "Go to dashboard", href: "/dashboard" },
+    glow: "bg-sky-500/30"
+  },
+  {
+    afterIndex: 2,
+    eyebrow: "Not sure where to start?",
+    title: "Start with a plan, not a blank page.",
+    body: "Describe where you want to get to and Flow maps the route — every milestone, in order.",
+    cta: { label: "Build a roadmap", href: "/roadmaps" },
+    glow: "bg-violet-500/30"
+  }
+];
+
+function FeatureBand({ band }: { band: Band }) {
+  return (
+    <section className="mt-14">
+      <div className="relative overflow-hidden rounded-3xl bg-slate-950 px-6 py-10 sm:px-10 sm:py-12">
+        <div
+          aria-hidden
+          className={cn(
+            "pointer-events-none absolute -right-10 -top-10 h-56 w-56 rounded-full blur-3xl",
+            band.glow
+          )}
+        />
+        <div className="relative flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="max-w-xl">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/50">
+              {band.eyebrow}
+            </p>
+            <h3 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+              {band.title}
+            </h3>
+            <p className="mt-2 text-white/70">{band.body}</p>
+          </div>
+          <Link
+            href={band.cta.href}
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 transition-transform hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            {band.cta.label}
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -169,16 +238,6 @@ export function ExploreGallery({
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-24 pt-8 sm:px-6">
-      <header className="mb-8">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-          Explore Flow
-        </h1>
-        <p className="mt-2 max-w-2xl text-muted-foreground">
-          Everything across the four products in one place. Open a tile, or filter to the
-          product you&rsquo;re here for.
-        </p>
-      </header>
-
       {/* Featured products — the "what each product is" row, wide cards. */}
       {filter === "all" && (
         <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -200,9 +259,17 @@ export function ExploreGallery({
         ))}
       </div>
 
-      {shown.map((row) => (
-        <Section key={row.id} row={row} />
-      ))}
+      {shown.map((row, i) => {
+        // Bands only make sense in the full view, keyed to the original order.
+        const band =
+          filter === "all" ? FEATURE_BANDS.find((b) => b.afterIndex === i) : undefined;
+        return (
+          <Fragment key={row.id}>
+            <Section row={row} />
+            {band && <FeatureBand band={band} />}
+          </Fragment>
+        );
+      })}
     </div>
   );
 }

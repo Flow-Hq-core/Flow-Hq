@@ -561,6 +561,19 @@ export type ExploreCard = {
   meta?: string;
   /** Optional pill above the title, e.g. a level or "New". */
   badge?: string;
+  /**
+   * Public path to the tile image (in apps/app/public). The page renders it
+   * only when the file actually exists and otherwise falls back to the drawn
+   * motif, so these can point at files that aren't generated yet. Filenames
+   * are specified in docs/explore-image-shotlist.md.
+   */
+  image?: string;
+  /**
+   * Public path to a looping video for the tile. Takes precedence over `image`
+   * when the file exists; `image` (or the motif) is the poster/fallback while
+   * it loads or under reduced-motion. Same build-time existence check.
+   */
+  video?: string;
 };
 
 export type ExploreRow = {
@@ -594,7 +607,8 @@ export const EXPLORE_ROWS: readonly ExploreRow[] = [
       description: r.description,
       href: r.href,
       badge: r.level,
-      meta: r.category
+      meta: r.category,
+      image: `/explore/${r.href.split("/").pop()}.webp`
     }))
   },
   {
@@ -606,27 +620,32 @@ export const EXPLORE_ROWS: readonly ExploreRow[] = [
       {
         title: "Business idea",
         description: "Pressure-test an idea before you commit to building it.",
-        href: "/business-ai"
+        href: "/business-ai",
+        image: "/explore/business-idea.webp"
       },
       {
         title: "Existing business",
         description: "Diagnose what's holding a running business back.",
-        href: "/business-ai"
+        href: "/business-ai",
+        image: "/explore/existing-business.webp"
       },
       {
         title: "Marketing",
         description: "Positioning, messaging, and channel performance.",
-        href: "/business-ai"
+        href: "/business-ai",
+        image: "/explore/marketing.webp"
       },
       {
         title: "Operations",
         description: "Workflows, bottlenecks, and what to automate.",
-        href: "/business-ai"
+        href: "/business-ai",
+        image: "/explore/operations.webp"
       },
       {
         title: "Competition",
         description: "Where you sit in the field and where you blend in.",
-        href: "/business-ai"
+        href: "/business-ai",
+        image: "/explore/competition.webp"
       }
     ]
   },
@@ -639,17 +658,20 @@ export const EXPLORE_ROWS: readonly ExploreRow[] = [
       {
         title: "Product launch",
         description: "Spec to launch checklist.",
-        href: "/projects/new"
+        href: "/projects/new",
+        image: "/explore/product-launch.webp"
       },
       {
         title: "Market research",
         description: "ICP, competitors, demand signals.",
-        href: "/projects/new"
+        href: "/projects/new",
+        image: "/explore/market-research.webp"
       },
       {
         title: "Hiring plan",
         description: "Roles, sequence, and onboarding.",
-        href: "/projects/new"
+        href: "/projects/new",
+        image: "/explore/hiring-plan.webp"
       }
     ]
   },
@@ -663,19 +685,22 @@ export const EXPLORE_ROWS: readonly ExploreRow[] = [
         title: "Positioning Mastery",
         description: "Find the wedge, tell the story, test it.",
         href: "/playlists/positioning-mastery",
-        meta: "7 lessons · Business"
+        meta: "7 lessons · Business",
+        image: "/explore/positioning-mastery.webp"
       },
       {
         title: "Python Mastery",
         description: "From syntax to shipping real tools.",
         href: "/playlists/python-mastery",
-        meta: "24 lessons · Technology"
+        meta: "24 lessons · Technology",
+        image: "/explore/python-mastery.webp"
       },
       {
         title: "Unit Economics",
         description: "Know whether the business actually works.",
         href: "/playlists/unit-economics",
-        meta: "9 lessons · Business"
+        meta: "9 lessons · Business",
+        image: "/explore/unit-economics.webp"
       }
     ]
   }

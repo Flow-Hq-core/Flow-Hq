@@ -2,7 +2,14 @@
 
 import { Fragment, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Brain, FolderKanban, GraduationCap, Map } from "lucide-react";
+import {
+  ArrowRight,
+  Brain,
+  FolderKanban,
+  GraduationCap,
+  LayoutTemplate,
+  Map
+} from "lucide-react";
 import { ExploreCover } from "@/components/explore/explore-cover";
 import { cn } from "@/lib/utils";
 
@@ -98,27 +105,27 @@ function ItemTile({
 }
 
 function FeaturedCard({ tile, index }: { tile: FeaturedTile; index: number }) {
-  const Icon = ICONS[tile.id];
+  // Highlight style: clean media, caption *below* the card — matching the
+  // reference's highlight row rather than the overlaid-title item tiles.
   return (
     <Link
       href={tile.href}
-      className="group relative aspect-video w-[22rem] shrink-0 snap-start overflow-hidden rounded-3xl border border-border bg-card transition-shadow hover:shadow-flow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-[30rem]"
+      className="group block w-[22rem] shrink-0 snap-start focus-visible:outline-none sm:w-[30rem]"
     >
-      <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.05]">
-        <MediaLayer rowId={tile.id} index={index} video={tile.video} image={tile.image} />
+      <div className="relative aspect-video overflow-hidden rounded-2xl border border-border bg-card group-focus-visible:ring-2 group-focus-visible:ring-ring group-focus-visible:ring-offset-2">
+        <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.04]">
+          <MediaLayer rowId={tile.id} index={index} video={tile.video} image={tile.image} />
+        </div>
+        {/* Crisp directional edge, à la the reference card. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.35),inset_0_-1px_2px_rgba(0,0,0,0.10)]"
+        />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-      <div className="absolute inset-0 flex flex-col justify-end p-5">
-        <span className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 backdrop-blur">
-          <Icon className="h-4 w-4 text-white" />
-        </span>
-        <h3 className="text-lg font-semibold text-white">{tile.name}</h3>
-        <p className="mt-1 text-sm text-white/70">{tile.tagline}</p>
-        <span className="mt-3 inline-flex items-center text-sm font-semibold text-white">
-          Open
-          <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-        </span>
-      </div>
+      <h3 className="mt-3 text-sm font-semibold uppercase tracking-wide text-foreground">
+        {tile.name}
+      </h3>
+      <p className="mt-0.5 text-sm text-muted-foreground">{tile.tagline}</p>
     </Link>
   );
 }
@@ -192,6 +199,85 @@ function FeatureBand({ band }: { band: Band }) {
   );
 }
 
+/**
+ * Quick actions — the reference's feature grid, repurposed from a model
+ * catalog (which Flow doesn't have) into action entry points. These are verbs,
+ * deliberately distinct from the browse-oriented product rows, so the grid
+ * isn't a third restatement of the four products.
+ */
+const QUICK_ACTIONS: {
+  icon: typeof Map;
+  title: string;
+  sub: string;
+  href: string;
+  badge?: "AI" | "New";
+}[] = [
+  { icon: Map, title: "Build a roadmap", sub: "Map any goal from start to finish.", href: "/roadmaps" },
+  {
+    icon: FolderKanban,
+    title: "Start a project",
+    sub: "Turn a plan into tasks, timeline, risks.",
+    href: "/projects/new",
+    badge: "AI"
+  },
+  {
+    icon: Brain,
+    title: "Analyze a business",
+    sub: "Get findings and an action plan.",
+    href: "/business-ai",
+    badge: "AI"
+  },
+  {
+    icon: LayoutTemplate,
+    title: "Browse templates",
+    sub: "Reusable starting points.",
+    href: "/templates",
+    badge: "New"
+  }
+];
+
+function QuickActions() {
+  return (
+    <section className="mt-8">
+      <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        Quick actions
+      </h2>
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {QUICK_ACTIONS.map((action) => {
+          const Icon = action.icon;
+          return (
+            <Link
+              key={action.title}
+              href={action.href}
+              className="group rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-flow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent">
+                  <Icon className="h-5 w-5 text-primary" />
+                </span>
+                {action.badge && (
+                  <span
+                    className={cn(
+                      "rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide",
+                      action.badge === "AI"
+                        ? "bg-primary/10 text-primary"
+                        : "bg-amber-100 text-amber-700"
+                    )}
+                  >
+                    {action.badge}
+                  </span>
+                )}
+              </div>
+              <h3 className="mt-4 text-base font-semibold text-foreground">{action.title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{action.sub}</p>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 function Section({ row }: { row: GalleryRow }) {
   const Icon = ICONS[row.id];
   return (
@@ -246,6 +332,9 @@ export function ExploreGallery({
           ))}
         </div>
       )}
+
+      {/* Quick actions — below the highlight, unfiltered view only. */}
+      {filter === "all" && <QuickActions />}
 
       {/* Filter bar */}
       <div className="sticky top-14 z-20 -mx-4 mt-10 flex gap-2 overflow-x-auto bg-background/80 px-4 py-3 backdrop-blur [scrollbar-width:none] sm:-mx-6 sm:px-6 [&::-webkit-scrollbar]:hidden">

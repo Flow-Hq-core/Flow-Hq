@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Bell } from "lucide-react";
 import { APP_NAME } from "@flow-hq/shared";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { AccountMenu } from "@/components/account-menu";
 import { AppNav } from "@/components/app-nav";
@@ -10,15 +11,18 @@ export function AppShell({
   children,
   title,
   description,
-  fullWidth = false
+  fullWidth = false,
+  dark = false
 }: {
   children: React.ReactNode;
   title?: string;
   description?: string;
   fullWidth?: boolean;
+  /** Flip the whole shell (header + body) to the dark ground. */
+  dark?: boolean;
 }) {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className={cn("min-h-screen bg-background text-foreground", dark && "dark")}>
       <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur">
         <div className="flex h-14 items-center gap-4 px-4 sm:px-6">
           <Link href="/explore" className="shrink-0 text-lg font-bold tracking-tight">

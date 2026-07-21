@@ -1,96 +1,53 @@
-import Link from "next/link";
-import { ArrowRight, Brain, FolderKanban, GraduationCap, Map } from "lucide-react";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { AppShell } from "@/components/app-shell";
-import { ExploreCover } from "@/components/explore/explore-cover";
-import { EXPLORE_ROWS, type ExploreCard, type ExploreRow } from "@flow-hq/shared";
-import { cn } from "@/lib/utils";
+import {
+  ExploreGallery,
+  type FeaturedTile,
+  type GalleryRow
+} from "@/components/explore/explore-gallery";
+import { EXPLORE_ROWS, FLOW_PRODUCTS } from "@flow-hq/shared";
 
-const ROW_ICONS = {
-  roadmaps: Map,
-  projects: FolderKanban,
-  "business-ai": Brain,
-  playlists: GraduationCap
-} as const;
-
-function Card({ card, rowId, index }: { card: ExploreCard; rowId: ExploreRow["id"]; index: number }) {
-  return (
-    <Link
-      href={card.href}
-      className="group flex w-72 shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-border bg-background transition-shadow hover:shadow-flow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-80"
-    >
-      <div className="overflow-hidden border-b border-border">
-        <div className="transition-transform duration-500 group-hover:scale-[1.04]">
-          <ExploreCover id={rowId} index={index} />
-        </div>
-      </div>
-
-      <div className="flex flex-1 flex-col p-5">
-        {card.badge && (
-          <span className="mb-2 w-fit rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-            {card.badge}
-          </span>
-        )}
-        <h3 className="text-base font-semibold text-foreground">{card.title}</h3>
-        <p className="mt-1.5 flex-1 text-sm leading-relaxed text-muted-foreground">
-          {card.description}
-        </p>
-        {card.meta && (
-          <p className="mt-4 text-xs font-medium text-muted-foreground">{card.meta}</p>
-        )}
-      </div>
-    </Link>
-  );
-}
-
-function Row({ row }: { row: ExploreRow }) {
-  const Icon = ROW_ICONS[row.id];
-  return (
-    <section className="mb-14">
-      <div className="mb-4 flex items-end justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent">
-            <Icon className="h-4 w-4 text-primary" />
-          </span>
-          <div className="min-w-0">
-            <h2 className="text-lg font-semibold text-foreground">{row.title}</h2>
-            <p className="truncate text-sm text-muted-foreground">{row.subtitle}</p>
-          </div>
-        </div>
-        <Link
-          href={row.href}
-          className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-primary hover:underline"
-        >
-          See all
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
-
-      {/* Horizontal carousel. The negative margins let cards bleed to the
-          viewport edge so the row reads as scrollable, and the padding keeps
-          the first and last card clear of the content gutter. */}
-      <div
-        className={cn(
-          "-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6",
-          "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        )}
-      >
-        {row.cards.map((card, i) => (
-          <Card key={`${row.id}-${card.title}`} card={card} rowId={row.id} index={i} />
-        ))}
-      </div>
-    </section>
-  );
+/**
+ * Media presence is resolved here, on the server, because the check hits the
+ * filesystem (this page is statically rendered). The client gallery then just
+ * receives plain paths — present files win, missing ones fall back to the
+ * drawn motif. Priority: video → image → motif.
+ */
+function present(path?: string): string | undefined {
+  return path && existsSync(join(process.cwd(), "public", path)) ? path : undefined;
 }
 
 export default function ExplorePage() {
+  // One large tile per product, by convention /explore/<id>.{mp4,webp}.
+  const featured: FeaturedTile[] = FLOW_PRODUCTS.map((p) => ({
+    id: p.id,
+    name: p.name,
+    tagline: p.tagline,
+    href: p.appPath,
+    video: present(`/explore/${p.id}.mp4`),
+    image: present(`/explore/${p.id}.webp`)
+  }));
+
+  const rows: GalleryRow[] = EXPLORE_ROWS.map((row) => ({
+    id: row.id,
+    title: row.title,
+    subtitle: row.subtitle,
+    href: row.href,
+    cards: row.cards.map((c) => ({
+      title: c.title,
+      description: c.description,
+      href: c.href,
+      meta: c.meta,
+      badge: c.badge,
+      video: present(c.video),
+      image: present(c.image)
+    }))
+  }));
+
   return (
-    <AppShell
-      title="Explore"
-      description="Everything across Flow, one product per row. Browse a row, or open a product to see it all."
-    >
-      {EXPLORE_ROWS.map((row) => (
-        <Row key={row.id} row={row} />
-      ))}
+    <AppShell fullWidth>
+      <ExploreGallery featured={featured} rows={rows} />
     </AppShell>
   );
 }

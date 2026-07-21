@@ -60,6 +60,45 @@
 }
 
 @layer base {
+  /*
+   * Dark ground, opt-in via the `.dark` class (AppShell dark prop) — the app
+   * is light by default and only Explore adopts this for now. Same variable
+   * names as :root so every token-based component flips with no per-component
+   * work. This is the first slice of the eventual dark-app conversion.
+   */
+  .dark {
+    --background: 224 33% 6%;
+    --foreground: 220 15% 92%;
+    --card: 222 26% 9%;
+    --card-foreground: 220 15% 92%;
+    --popover: 222 26% 9%;
+    --popover-foreground: 220 15% 92%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 20% 16%;
+    --secondary-foreground: 220 15% 92%;
+    --muted: 222 20% 14%;
+    --muted-foreground: 220 12% 60%;
+    --accent: 221 60% 18%;
+    --accent-foreground: 214 95% 88%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 16% 18%;
+    --input: 220 16% 18%;
+    --ring: 217 91% 60%;
+  }
+
+  /* The base layer pins every heading to a dark gray; undo that under .dark so
+     headings use the (light) foreground token instead of vanishing. */
+  .dark h1,
+  .dark h2,
+  .dark h3,
+  .dark h4,
+  .dark h5,
+  .dark h6 {
+    color: hsl(var(--foreground));
+  }
+
   * {
     border-color: hsl(var(--border));
   }

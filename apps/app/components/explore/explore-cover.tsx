@@ -145,9 +145,10 @@ function Motif({ id, active }: { id: ProductId; active: number }) {
 
 export function ExploreCover({ id, index }: { id: ProductId; index: number }) {
   const palette = PALETTE[id];
+  // Fills its parent — the card sets the aspect ratio and clips.
   return (
-    <div className={cn("relative aspect-video w-full overflow-hidden bg-gradient-to-br", palette.gradient)}>
-      <div className={cn("absolute inset-0 p-4", palette.stroke)}>
+    <div className={cn("absolute inset-0 bg-gradient-to-br", palette.gradient)}>
+      <div className={cn("absolute inset-0 p-5", palette.stroke)}>
         <Motif id={id} active={index} />
       </div>
     </div>

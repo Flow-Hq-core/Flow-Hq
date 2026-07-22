@@ -1,133 +1,74 @@
-import Link from "next/link";
-import { BarChart3, Building2, Lightbulb, Megaphone, Settings2, Swords } from "lucide-react";
+import { Activity, FileText, LayoutGrid, ListChecks, Megaphone, Tag } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { ConsultantPrompt } from "@/components/business-ai/consultant-prompt";
 
-/** Analysis types, per docs/Cluade/07-business-ai-module.md. */
-const analyses = [
-  {
-    icon: Lightbulb,
-    title: "Business idea",
-    description: "Pressure-test an idea before you commit to building it."
-  },
-  {
-    icon: Building2,
-    title: "Existing business",
-    description: "Diagnose what's holding a running business back."
-  },
-  {
-    icon: Megaphone,
-    title: "Marketing",
-    description: "Positioning, messaging, and channel performance."
-  },
-  {
-    icon: Settings2,
-    title: "Operations",
-    description: "Workflows, bottlenecks, and what to automate."
-  },
-  {
-    icon: Swords,
-    title: "Competition",
-    description: "Where you sit in the field and where you blend in."
-  }
+/**
+ * What Business AI can do — grounded in docs/Product.md. It's a consultant
+ * that generates, not a fixed set of report types, so this shows the breadth
+ * rather than five categories.
+ */
+const capabilities = [
+  { icon: Activity, title: "Diagnose", desc: "Find what's actually holding the business back." },
+  { icon: ListChecks, title: "SOPs & workflows", desc: "Turn how you work into repeatable systems." },
+  { icon: LayoutGrid, title: "Business canvases", desc: "Model the whole business on one page." },
+  { icon: Tag, title: "Pricing & offers", desc: "Sharpen what you sell and what you charge." },
+  { icon: Megaphone, title: "Marketing", desc: "Positioning, messaging, and channels." },
+  { icon: FileText, title: "Documents", desc: "Checklists, templates, and docs — generated." }
 ];
 
-/** Placeholder until reports come from @flow-hq/database. */
-const recentReports = [
-  { title: "Positioning analysis", meta: "4 findings · 2 days ago" },
-  { title: "Q1 operations review", meta: "6 findings · last week" }
+/** Placeholder until conversations come from @flow-hq/database. */
+const recent = [
+  { title: "Coffee shop retention", meta: "12 messages · 2 days ago" },
+  { title: "Pricing for design agency", meta: "6 messages · last week" }
 ];
-
-const recommendations = [
-  {
-    title: "Fix positioning",
-    detail: "You read as one of four near-identical brands.",
-    href: "/projects/new"
-  },
-  {
-    title: "Add an upsell path",
-    detail: "First-order customers never see a second offer.",
-    href: "/projects/new"
-  },
-  {
-    title: "Diversify acquisition",
-    detail: "84% of new customers come from one paid source.",
-    href: "/roadmaps"
-  }
-];
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="mb-10">
-      <h2 className="mb-4 text-lg font-semibold">{title}</h2>
-      {children}
-    </section>
-  );
-}
 
 export default function BusinessAIPage() {
   return (
-    <AppShell
-      title="Your AI business advisor."
-      description="Analyze an idea or a running business. Get findings, recommendations, and an action plan you can turn straight into a project."
-    >
-      <Section title="Choose analysis">
+    <AppShell>
+      <section className="mx-auto max-w-2xl pt-6 text-center sm:pt-10">
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          What can I help you <span className="text-primary">solve?</span>
+        </h1>
+        <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+          Flow Business AI is your consultant. Describe a problem and it diagnoses the business,
+          plans the fix, and generates the documents to get it done.
+        </p>
+        <div className="mt-8">
+          <ConsultantPrompt />
+        </div>
+      </section>
+
+      <section className="mt-16">
+        <h2 className="mb-4 text-lg font-semibold">What it can do</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {analyses.map((analysis) => (
-            <Card key={analysis.title} className="p-5 transition-shadow hover:shadow-flow-md">
+          {capabilities.map((cap) => (
+            <Card key={cap.title} className="p-5">
               <CardHeader className="p-0">
                 <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-accent">
-                  <analysis.icon className="h-4 w-4 text-primary" />
+                  <cap.icon className="h-4 w-4 text-primary" />
                 </div>
-                <CardTitle className="text-base">{analysis.title}</CardTitle>
-                <CardDescription className="leading-relaxed">
-                  {analysis.description}
-                </CardDescription>
+                <CardTitle className="text-base">{cap.title}</CardTitle>
+                <CardDescription className="leading-relaxed">{cap.desc}</CardDescription>
               </CardHeader>
-              <div className="mt-4">
-                <Button variant="outline" size="sm" asChild>
-                  <Link href="/business-ai">Start analysis</Link>
-                </Button>
-              </div>
             </Card>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="AI recommendations">
-        <div className="space-y-3">
-          {recommendations.map((rec) => (
-            <Card key={rec.title} className="p-5">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-start gap-3">
-                  <BarChart3 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <div>
-                    <CardTitle className="text-base">{rec.title}</CardTitle>
-                    <CardDescription className="mt-0.5">{rec.detail}</CardDescription>
-                  </div>
-                </div>
-                <Button variant="outline" size="sm" asChild>
-                  <Link href={rec.href}>Create project</Link>
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </Section>
-
-      <Section title="Recent reports">
+      <section className="mt-12">
+        <h2 className="mb-4 text-lg font-semibold">Recent conversations</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          {recentReports.map((report) => (
-            <Card key={report.title} className="p-5">
+          {recent.map((item) => (
+            <Card key={item.title} className="p-5">
               <CardHeader className="p-0">
-                <CardTitle className="text-base">{report.title}</CardTitle>
-                <CardDescription>{report.meta}</CardDescription>
+                <CardTitle className="text-base">{item.title}</CardTitle>
+                <CardDescription>{item.meta}</CardDescription>
               </CardHeader>
             </Card>
           ))}
         </div>
-      </Section>
+      </section>
     </AppShell>
   );
 }

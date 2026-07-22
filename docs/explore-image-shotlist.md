@@ -50,13 +50,15 @@ Why those hard "no"s:
 | `data-engineering-flow.webp` | Streams of luminous particles flowing through branching pipelines into a clean structured lattice. |
 
 ### Business AI — violet
+Business AI is the consultant (diagnose + generate), so the tiles reflect what
+it produces, not fixed analysis subjects. See docs/Product.md.
 | Filename | Subject |
 | --- | --- |
-| `business-idea.webp` | A single spark igniting inside a faceted crystal — raw potential, about to catch. |
-| `existing-business.webp` | An exploded, x-ray-style view of a machine revealing its inner workings — diagnosis. |
+| `diagnose.webp` | An exploded, x-ray-style view of a machine revealing its inner workings — diagnosis. |
+| `sop.webp` | Clean interlocking steps flowing into a single repeating loop — a documented system. |
+| `canvas.webp` | A single sheet divided into glowing panels, a whole model on one page. |
+| `pricing.webp` | A balanced scale of glowing geometric weights tilting to the right value. |
 | `marketing.webp` | Concentric ripples radiating outward from one bright point across a dark field — reach and signal. |
-| `operations.webp` | A network of flowing conduits and valves with one section glowing hotter — a bottleneck found. |
-| `competition.webp` | Abstract chess-like forms on a dark board, one piece lit and set apart from a cluster — positioning. |
 
 ### Projects — amber
 | Filename | Subject |

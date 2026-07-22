@@ -157,10 +157,10 @@ const FEATURE_BANDS: Band[] = [
   },
   {
     afterIndex: 2,
-    eyebrow: "Not sure where to start?",
-    title: "Start with a plan, not a blank page.",
-    body: "Describe where you want to get to and Flow maps the route — every milestone, in order.",
-    cta: { label: "Build a roadmap", href: "/roadmaps" },
+    eyebrow: "The knowledge library",
+    title: "Learn what to build, then how.",
+    body: "Browse structured roadmaps — Business 101, marketing, sales — with the topics, resources, and templates for each.",
+    cta: { label: "Browse roadmaps", href: "/roadmaps" },
     glow: "bg-violet-500/30"
   }
 ];
@@ -212,18 +212,23 @@ const QUICK_ACTIONS: {
   href: string;
   badge?: "AI" | "New";
 }[] = [
-  { icon: Map, title: "Build a roadmap", sub: "Map any goal from start to finish.", href: "/roadmaps" },
+  {
+    icon: Map,
+    title: "Browse roadmaps",
+    sub: "Structured business knowledge to learn from.",
+    href: "/roadmaps"
+  },
   {
     icon: FolderKanban,
     title: "Start a project",
-    sub: "Turn a plan into tasks, timeline, risks.",
+    sub: "Plan and build a product — PRDs, flows, architecture.",
     href: "/projects/new",
     badge: "AI"
   },
   {
     icon: Brain,
-    title: "Analyze a business",
-    sub: "Get findings and an action plan.",
+    title: "Ask Business AI",
+    sub: "Diagnose, plan, and generate the documents.",
     href: "/business-ai",
     badge: "AI"
   },
@@ -303,7 +308,7 @@ function Section({ row }: { row: GalleryRow }) {
 
       {/* Horizontal scroll row of wide landscape cards. Negative margins bleed
           the cards to the content gutter so a partial card signals scroll. */}
-      <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="-mx-6 flex snap-x gap-4 overflow-x-auto px-6 pb-2 sm:-mx-8 sm:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {row.cards.map((card, i) => (
           <ItemTile key={`${row.id}-${card.title}`} card={card} rowId={row.id} index={i} />
         ))}
@@ -323,10 +328,10 @@ export function ExploreGallery({
   const shown = filter === "all" ? rows : rows.filter((r) => r.id === filter);
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 pb-24 pt-8 sm:px-6">
+    <div className="w-full px-6 pb-24 pt-8 sm:px-8">
       {/* Featured products — the "what each product is" row, wide cards. */}
       {filter === "all" && (
-        <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="-mx-6 flex snap-x gap-4 overflow-x-auto px-6 pb-2 sm:-mx-8 sm:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {featured.map((tile, i) => (
             <FeaturedCard key={tile.id} tile={tile} index={i} />
           ))}
@@ -337,7 +342,7 @@ export function ExploreGallery({
       {filter === "all" && <QuickActions />}
 
       {/* Filter bar */}
-      <div className="sticky top-14 z-20 -mx-4 mt-10 flex gap-2 overflow-x-auto bg-background/80 px-4 py-3 backdrop-blur [scrollbar-width:none] sm:-mx-6 sm:px-6 [&::-webkit-scrollbar]:hidden">
+      <div className="sticky top-14 z-20 -mx-6 mt-10 flex gap-2 overflow-x-auto bg-background/80 px-6 py-3 backdrop-blur [scrollbar-width:none] sm:-mx-8 sm:px-8 [&::-webkit-scrollbar]:hidden">
         <FilterPill active={filter === "all"} onClick={() => setFilter("all")}>
           All
         </FilterPill>

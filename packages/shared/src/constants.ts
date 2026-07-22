@@ -614,38 +614,38 @@ export const EXPLORE_ROWS: readonly ExploreRow[] = [
   {
     id: "business-ai",
     title: "Business AI",
-    subtitle: "Point it at an idea or a running business.",
+    subtitle: "Your business consultant — diagnose, plan, and generate.",
     href: "/business-ai",
     cards: [
       {
-        title: "Business idea",
-        description: "Pressure-test an idea before you commit to building it.",
+        title: "Diagnose a business",
+        description: "Find what's holding it back, with the evidence.",
         href: "/business-ai",
-        image: "/explore/business-idea.webp"
+        image: "/explore/diagnose.webp"
       },
       {
-        title: "Existing business",
-        description: "Diagnose what's holding a running business back.",
+        title: "Generate an SOP",
+        description: "Turn how you work into a repeatable system.",
         href: "/business-ai",
-        image: "/explore/existing-business.webp"
+        image: "/explore/sop.webp"
       },
       {
-        title: "Marketing",
-        description: "Positioning, messaging, and channel performance.",
+        title: "Business model canvas",
+        description: "Model the whole business on one page.",
+        href: "/business-ai",
+        image: "/explore/canvas.webp"
+      },
+      {
+        title: "Improve pricing",
+        description: "Sharpen what you charge and why.",
+        href: "/business-ai",
+        image: "/explore/pricing.webp"
+      },
+      {
+        title: "Fix marketing",
+        description: "Positioning, messaging, and channels.",
         href: "/business-ai",
         image: "/explore/marketing.webp"
-      },
-      {
-        title: "Operations",
-        description: "Workflows, bottlenecks, and what to automate.",
-        href: "/business-ai",
-        image: "/explore/operations.webp"
-      },
-      {
-        title: "Competition",
-        description: "Where you sit in the field and where you blend in.",
-        href: "/business-ai",
-        image: "/explore/competition.webp"
       }
     ]
   },

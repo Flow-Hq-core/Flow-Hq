@@ -1,25 +1,27 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Sparkles } from "lucide-react";
 
 /**
  * Replit-style prompt hero for the business consultant. Business AI is
  * conversational (per docs/Product.md — "help me solve this business
  * problem"), so the page leads with an input, not a grid of fixed report
- * types. Chips and examples prefill the box.
+ * types.
+ *
+ * The old capability pills now live *inside* the box as an animated,
+ * typewriter placeholder that cycles through them. Examples still prefill.
  *
  * There's no AI backend yet, so submit is a no-op — the value here is the
- * consultant framing and the entry point, consistent with the rest of the
- * scaffolded app.
+ * consultant framing and the entry point.
  */
-const CHIPS = [
-  { label: "Diagnose my business", prompt: "Diagnose what's holding my business back: " },
-  { label: "Write an SOP", prompt: "Write an SOP for " },
-  { label: "Improve pricing", prompt: "Improve the pricing for " },
-  { label: "Fix my marketing", prompt: "Improve the marketing for " },
-  { label: "Business model canvas", prompt: "Build a business model canvas for " },
-  { label: "Brainstorm ideas", prompt: "Brainstorm ideas for " }
+const PLACEHOLDER_PHRASES = [
+  "Diagnose my business",
+  "Write an SOP",
+  "Improve pricing",
+  "Fix my marketing",
+  "Build a business model canvas",
+  "Brainstorm ideas"
 ];
 
 const EXAMPLES = [
@@ -28,9 +30,50 @@ const EXAMPLES = [
   "Improve pricing for my design agency"
 ];
 
+/** Types each phrase out, pauses, deletes, moves on. Frozen while `paused`. */
+function useTypewriter(phrases: string[], paused: boolean) {
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (paused || reduce) {
+      setText("Describe your business problem…");
+      return;
+    }
+
+    let phrase = 0;
+    let char = 0;
+    let deleting = false;
+    let timer: ReturnType<typeof setTimeout>;
+
+    const tick = () => {
+      const full = phrases[phrase];
+      char += deleting ? -1 : 1;
+      setText(full.slice(0, char));
+
+      if (!deleting && char === full.length) {
+        deleting = true;
+        timer = setTimeout(tick, 1500);
+      } else if (deleting && char === 0) {
+        deleting = false;
+        phrase = (phrase + 1) % phrases.length;
+        timer = setTimeout(tick, 350);
+      } else {
+        timer = setTimeout(tick, deleting ? 30 : 60);
+      }
+    };
+
+    timer = setTimeout(tick, 500);
+    return () => clearTimeout(timer);
+  }, [phrases, paused]);
+
+  return text;
+}
+
 export function ConsultantPrompt() {
   const [value, setValue] = useState("");
   const ref = useRef<HTMLTextAreaElement>(null);
+  const placeholder = useTypewriter(PLACEHOLDER_PHRASES, value.length > 0);
 
   const fill = (text: string) => {
     setValue(text);
@@ -48,7 +91,7 @@ export function ConsultantPrompt() {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           rows={2}
-          placeholder="Describe your business problem…"
+          placeholder={placeholder}
           className="w-full resize-none rounded-2xl bg-transparent px-4 py-3.5 pr-14 text-base outline-none placeholder:text-muted-foreground"
         />
         <button
@@ -60,19 +103,6 @@ export function ConsultantPrompt() {
           <ArrowUp className="h-4 w-4" />
         </button>
       </form>
-
-      {/* Capability chips — prefill a starter prompt. */}
-      <div className="mt-4 flex flex-wrap justify-center gap-2">
-        {CHIPS.map((chip) => (
-          <button
-            key={chip.label}
-            onClick={() => fill(chip.prompt)}
-            className="rounded-full border border-border bg-background px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:border-muted-foreground/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {chip.label}
-          </button>
-        ))}
-      </div>
 
       {/* Example prompts */}
       <div className="mt-8 text-center">

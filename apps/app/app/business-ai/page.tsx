@@ -26,7 +26,7 @@ const recent = [
 export default function BusinessAIPage() {
   return (
     <AppShell>
-      <section className="mx-auto max-w-2xl pt-6 text-center sm:pt-10">
+      <section className="mx-auto max-w-2xl pt-16 text-center sm:pt-28">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           What can I help you <span className="text-primary">solve?</span>
         </h1>

@@ -61,11 +61,13 @@ it produces, not fixed analysis subjects. See docs/Product.md.
 | `marketing.webp` | Concentric ripples radiating outward from one bright point across a dark field — reach and signal. |
 
 ### Projects — amber
+Projects is the AI product manager (software/product), so tiles reflect what it
+plans, not business templates. See docs/Product.md.
 | Filename | Subject |
 | --- | --- |
-| `product-launch.webp` | A sleek form ascending on a restrained trail of light — liftoff, not fireworks. |
-| `market-research.webp` | A lens focusing a single beam onto a field of scattered data points — signal from noise. |
-| `hiring-plan.webp` | Abstract figure-nodes (no faces) connecting into an organised structure — a team assembling. |
+| `prd.webp` | A structured document unfolding into ordered sections — a written spec taking shape. |
+| `user-flows.webp` | Connected screens linked by directional arrows — a path through a product. |
+| `architecture.webp` | Modular blocks and connectors assembling into a clean system diagram. |
 
 ### Playlists — emerald
 | Filename | Subject |

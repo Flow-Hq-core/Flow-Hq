@@ -59,25 +59,25 @@ export const FLOW_PRODUCTS: readonly FlowProduct[] = [
   {
     id: "projects",
     name: "Flow Projects",
-    tagline: "Turn plans into execution.",
-    cta: "Create Project",
+    tagline: "Plan and build your product.",
+    cta: "Start Building",
     appPath: "/projects",
     marketingPath: "/products/projects",
-    headline: "Turn plans into execution.",
+    headline: "From idea to architecture.",
     description:
-      "Take any step of your roadmap and make it real work — tasks, timeline, and risks, generated rather than hand-built.",
+      "Describe what you're building and Flow plans it — PRD, user flows, architecture, tech stack, and API. Your AI product manager for software and hardware.",
     features: [
       {
-        title: "Straight from a roadmap step",
-        description: "Turn any milestone into a project without restating the context."
+        title: "Specs, not blank pages",
+        description: "PRDs, user flows, and architecture, drafted from a description."
       },
       {
-        title: "Generated, not blank",
-        description: "Goals, requirements, tasks, and a timeline come pre-drafted."
+        title: "The whole build plan",
+        description: "Tech stack, database design, and API planning, together."
       },
       {
-        title: "Risks surfaced early",
-        description: "Know what's likely to derail the work before it does."
+        title: "Products, not business ops",
+        description: "Built for software, hardware, and startup products."
       }
     ]
   },
@@ -652,26 +652,26 @@ export const EXPLORE_ROWS: readonly ExploreRow[] = [
   {
     id: "projects",
     title: "Projects",
-    subtitle: "Turn a plan into work you can actually run.",
+    subtitle: "Your AI product manager — from idea to architecture.",
     href: "/projects",
     cards: [
       {
-        title: "Product launch",
-        description: "Spec to launch checklist.",
+        title: "Draft a PRD",
+        description: "Turn the idea into a written spec.",
         href: "/projects/new",
-        image: "/explore/product-launch.webp"
+        image: "/explore/prd.webp"
       },
       {
-        title: "Market research",
-        description: "ICP, competitors, demand signals.",
+        title: "Design user flows",
+        description: "Map how people move through it.",
         href: "/projects/new",
-        image: "/explore/market-research.webp"
+        image: "/explore/user-flows.webp"
       },
       {
-        title: "Hiring plan",
-        description: "Roles, sequence, and onboarding.",
+        title: "Plan the architecture",
+        description: "How the pieces fit together.",
         href: "/projects/new",
-        image: "/explore/hiring-plan.webp"
+        image: "/explore/architecture.webp"
       }
     ]
   },

@@ -1,7 +1,22 @@
 import { Activity, FileText, LayoutGrid, ListChecks, Megaphone, Tag } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ConsultantPrompt } from "@/components/business-ai/consultant-prompt";
+import { PromptBox } from "@/components/ai/prompt-box";
+
+const PHRASES = [
+  "Diagnose my business",
+  "Write an SOP",
+  "Improve pricing",
+  "Fix my marketing",
+  "Build a business model canvas",
+  "Brainstorm ideas"
+];
+
+const EXAMPLES = [
+  "Why is my coffee shop losing repeat customers?",
+  "Write an SOP for onboarding a new hire",
+  "Improve pricing for my design agency"
+];
 
 /**
  * What Business AI can do — grounded in docs/Product.md. It's a consultant
@@ -35,7 +50,12 @@ export default function BusinessAIPage() {
           plans the fix, and generates the documents to get it done.
         </p>
         <div className="mt-8">
-          <ConsultantPrompt />
+          <PromptBox
+            phrases={PHRASES}
+            examples={EXAMPLES}
+            ariaLabel="Ask Flow Business AI"
+            fallbackPlaceholder="Describe your business problem…"
+          />
         </div>
       </section>
 

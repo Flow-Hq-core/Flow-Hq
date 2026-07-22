@@ -1,127 +1,95 @@
-import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { Boxes, Database, FileText, Lightbulb, Route, Layers } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { PromptBox } from "@/components/ai/prompt-box";
+
+const PHRASES = [
+  "Brainstorm my product",
+  "Draft a PRD",
+  "Design the user flows",
+  "Plan the architecture",
+  "Choose a tech stack",
+  "Design the database",
+  "Plan the API"
+];
+
+const EXAMPLES = [
+  "Draft a PRD for a habit-tracking app",
+  "Design the user flows for a checkout",
+  "Plan the architecture for a group-chat app"
+];
+
+/**
+ * What Projects can do — grounded in docs/Product.md. Projects is the AI
+ * product manager for software/hardware/startup products (NOT businesses):
+ * brainstorm, PRDs, user flows, architecture, tech stack, database, API.
+ */
+const capabilities = [
+  { icon: Lightbulb, title: "Brainstorm", desc: "Shape the idea before you build it." },
+  { icon: FileText, title: "PRDs & specs", desc: "Turn the idea into a written spec." },
+  { icon: Route, title: "User flows", desc: "Map how people move through it." },
+  { icon: Boxes, title: "Architecture", desc: "Plan how the pieces fit together." },
+  { icon: Layers, title: "Tech stack", desc: "Pick the tools, and the reasons." },
+  { icon: Database, title: "Database & API", desc: "Design the data and the endpoints." }
+];
 
 /** Placeholder until projects come from @flow-hq/database. */
-const activeProjects = [
-  {
-    id: "marketing-campaign-q2",
-    title: "Marketing Campaign Q2",
-    source: "From Business Operating roadmap",
-    progress: 42
-  },
-  {
-    id: "pricing-revamp",
-    title: "Pricing revamp",
-    source: "From Business AI finding",
-    progress: 18
-  }
+const recent = [
+  { title: "Habit tracker", meta: "PRD · 2 days ago" },
+  { title: "Checkout redesign", meta: "User flows · last week" }
 ];
-
-const templates = [
-  { title: "Product launch", description: "Spec to launch checklist." },
-  { title: "Market research", description: "ICP, competitors, demand signals." },
-  { title: "Hiring plan", description: "Roles, sequence, and onboarding." }
-];
-
-const recentProjects = [
-  { title: "Competitor teardown", meta: "Completed · 2 days ago" },
-  { title: "Positioning draft", meta: "Completed · last week" }
-];
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="mb-10">
-      <h2 className="mb-4 text-lg font-semibold">{title}</h2>
-      {children}
-    </section>
-  );
-}
 
 export default function ProjectsPage() {
   return (
-    <AppShell
-      title="Turn ideas into execution."
-      description="Take any step of a roadmap and make it real work — tasks, timeline, and risks, generated rather than hand-built."
-    >
-      <div className="mb-8">
-        <Button asChild>
-          <Link href="/projects/new">Create Project</Link>
-        </Button>
-      </div>
+    <AppShell>
+      <section className="mx-auto max-w-2xl pt-16 text-center sm:pt-28">
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          What are you <span className="text-primary">building?</span>
+        </h1>
+        <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+          Flow Projects is your AI product manager. Describe what you&rsquo;re building and it plans
+          the PRD, user flows, architecture, and stack.
+        </p>
+        <div className="mt-8">
+          <PromptBox
+            phrases={PHRASES}
+            examples={EXAMPLES}
+            ariaLabel="Ask Flow Projects"
+            fallbackPlaceholder="Describe what you're building…"
+          />
+        </div>
+      </section>
 
-      <Section title="Active projects">
-        <div className="grid gap-4 sm:grid-cols-2">
-          {activeProjects.map((project) => (
-            <Link key={project.id} href={`/projects/${project.id}`}>
-              <Card className="h-full p-6 transition-shadow hover:shadow-flow-md">
-                <CardHeader className="p-0">
-                  <CardTitle className="text-lg">{project.title}</CardTitle>
-                  <CardDescription>{project.source}</CardDescription>
-                </CardHeader>
-                <div className="mt-4 flex items-center gap-2">
-                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
-                    <div
-                      className="h-full rounded-full bg-primary"
-                      style={{ width: `${project.progress}%` }}
-                    />
-                  </div>
-                  <span className="text-xs text-muted-foreground">{project.progress}%</span>
+      <section className="mt-16">
+        <h2 className="mb-4 text-lg font-semibold">What it can do</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {capabilities.map((cap) => (
+            <Card key={cap.title} className="p-5">
+              <CardHeader className="p-0">
+                <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-accent">
+                  <cap.icon className="h-4 w-4 text-primary" />
                 </div>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      </Section>
-
-      <Section title="AI project generator">
-        <Card className="p-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-start gap-4">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent">
-                <Sparkles className="h-5 w-5 text-primary" />
-              </span>
-              <div>
-                <CardTitle className="text-base">Describe it, get a plan</CardTitle>
-                <CardDescription className="mt-1">
-                  Goals, requirements, tasks, and a timeline — drafted before you start.
-                </CardDescription>
-              </div>
-            </div>
-            <Button asChild>
-              <Link href="/projects/new">Generate project</Link>
-            </Button>
-          </div>
-        </Card>
-      </Section>
-
-      <Section title="Templates">
-        <div className="grid gap-4 sm:grid-cols-3">
-          {templates.map((template) => (
-            <Card key={template.title} className="p-5 transition-shadow hover:shadow-flow-md">
-              <CardHeader className="p-0">
-                <CardTitle className="text-base">{template.title}</CardTitle>
-                <CardDescription>{template.description}</CardDescription>
+                <CardTitle className="text-base">{cap.title}</CardTitle>
+                <CardDescription className="leading-relaxed">{cap.desc}</CardDescription>
               </CardHeader>
             </Card>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Recent projects">
+      <section className="mt-12">
+        <h2 className="mb-4 text-lg font-semibold">Recent projects</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          {recentProjects.map((project) => (
-            <Card key={project.title} className="p-5">
+          {recent.map((item) => (
+            <Card key={item.title} className="p-5">
               <CardHeader className="p-0">
-                <CardTitle className="text-base">{project.title}</CardTitle>
-                <CardDescription>{project.meta}</CardDescription>
+                <CardTitle className="text-base">{item.title}</CardTitle>
+                <CardDescription>{item.meta}</CardDescription>
               </CardHeader>
             </Card>
           ))}
         </div>
-      </Section>
+      </section>
     </AppShell>
   );
 }

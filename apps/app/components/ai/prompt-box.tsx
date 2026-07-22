@@ -4,40 +4,21 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Sparkles } from "lucide-react";
 
 /**
- * Replit-style prompt hero for the business consultant. Business AI is
- * conversational (per docs/Product.md — "help me solve this business
- * problem"), so the page leads with an input, not a grid of fixed report
- * types.
+ * Prompt-first hero input shared by the AI surfaces (Business AI, Projects).
+ * Both are generative per docs/Product.md, so both lead with an input rather
+ * than a grid of fixed options.
  *
- * The old capability pills now live *inside* the box as an animated,
- * typewriter placeholder that cycles through them. Examples still prefill.
- *
- * There's no AI backend yet, so submit is a no-op — the value here is the
- * consultant framing and the entry point.
+ * `phrases` cycle through the box as a typewriter placeholder; `examples`
+ * prefill it on click. There's no AI backend yet, so submit is a no-op — the
+ * value is the framing and the entry point.
  */
-const PLACEHOLDER_PHRASES = [
-  "Diagnose my business",
-  "Write an SOP",
-  "Improve pricing",
-  "Fix my marketing",
-  "Build a business model canvas",
-  "Brainstorm ideas"
-];
-
-const EXAMPLES = [
-  "Why is my coffee shop losing repeat customers?",
-  "Write an SOP for onboarding a new hire",
-  "Improve pricing for my design agency"
-];
-
-/** Types each phrase out, pauses, deletes, moves on. Frozen while `paused`. */
-function useTypewriter(phrases: string[], paused: boolean) {
+function useTypewriter(phrases: string[], paused: boolean, fallback: string) {
   const [text, setText] = useState("");
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (paused || reduce) {
-      setText("Describe your business problem…");
+      setText(fallback);
       return;
     }
 
@@ -65,15 +46,25 @@ function useTypewriter(phrases: string[], paused: boolean) {
 
     timer = setTimeout(tick, 500);
     return () => clearTimeout(timer);
-  }, [phrases, paused]);
+  }, [phrases, paused, fallback]);
 
   return text;
 }
 
-export function ConsultantPrompt() {
+export function PromptBox({
+  phrases,
+  examples,
+  ariaLabel,
+  fallbackPlaceholder
+}: {
+  phrases: string[];
+  examples: string[];
+  ariaLabel: string;
+  fallbackPlaceholder: string;
+}) {
   const [value, setValue] = useState("");
   const ref = useRef<HTMLTextAreaElement>(null);
-  const placeholder = useTypewriter(PLACEHOLDER_PHRASES, value.length > 0);
+  const placeholder = useTypewriter(phrases, value.length > 0, fallbackPlaceholder);
 
   const fill = (text: string) => {
     setValue(text);
@@ -96,7 +87,7 @@ export function ConsultantPrompt() {
         />
         <button
           type="submit"
-          aria-label="Ask Flow Business AI"
+          aria-label={ariaLabel}
           disabled={!value.trim()}
           className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
@@ -104,13 +95,12 @@ export function ConsultantPrompt() {
         </button>
       </form>
 
-      {/* Example prompts */}
       <div className="mt-8 text-center">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Try an example
         </p>
         <div className="flex flex-wrap justify-center gap-2">
-          {EXAMPLES.map((example) => (
+          {examples.map((example) => (
             <button
               key={example}
               onClick={() => fill(example)}

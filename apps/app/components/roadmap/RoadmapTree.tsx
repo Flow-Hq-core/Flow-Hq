@@ -12,7 +12,7 @@ function childrenOf(node: RNode): RNode[] {
 function TreeNode({ node, root = false }: { node: RNode; root?: boolean }) {
   const kids = childrenOf(node);
   return (
-    <li>
+    <li data-status={node.status}>
       <span
         className={cn(styles.lbl, root && styles.root, node.status === "pending" && styles.pending)}
       >

@@ -1,121 +1,218 @@
 import Link from "next/link";
+import {
+  AppWindow,
+  BarChart3,
+  Bot,
+  BrainCircuit,
+  Briefcase,
+  Building,
+  Building2,
+  Cloud,
+  Code2,
+  Cog,
+  Contact,
+  Cpu,
+  Database,
+  Factory,
+  Globe,
+  GraduationCap,
+  HardHat,
+  HeartHandshake,
+  Infinity,
+  Landmark,
+  LayoutDashboard,
+  Megaphone,
+  Milestone,
+  Network,
+  PenTool,
+  Scale,
+  Server,
+  ShieldCheck,
+  ShoppingBag,
+  ShoppingCart,
+  Smartphone,
+  Sprout,
+  Stethoscope,
+  Target,
+  TrendingUp,
+  Truck,
+  UtensilsCrossed,
+  Users,
+  type LucideIcon
+} from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ROADMAP_CATEGORIES, ROADMAP_LINKS, type RoadmapLink } from "@flow-hq/shared";
+import { cn } from "@/lib/utils";
 
-function RoadmapCard({ roadmap }: { roadmap: RoadmapLink }) {
+/**
+ * The roadmap catalog, from docs/RoadmapList.md. Roadmaps is a browse-only
+ * knowledge library (docs/Product.md — it does NOT generate), so this is a
+ * directory of structured roadmaps grouped by category.
+ */
+type Group = {
+  category: string;
+  icon: LucideIcon;
+  /** Full class strings so Tailwind keeps them (no dynamic interpolation). */
+  chip: string;
+  ring: string;
+  roadmaps: string[];
+};
+
+const CATALOG: Group[] = [
+  {
+    category: "Business",
+    icon: Briefcase,
+    chip: "text-sky-600",
+    ring: "hover:border-sky-500/40",
+    roadmaps: [
+      "Business Foundations",
+      "Strategy",
+      "Finance",
+      "Marketing",
+      "Sales",
+      "Operations",
+      "Human Resources",
+      "Customer Success",
+      "Legal & Compliance",
+      "Technology"
+    ]
+  },
+  {
+    category: "Industries",
+    icon: Factory,
+    chip: "text-amber-600",
+    ring: "hover:border-amber-500/40",
+    roadmaps: [
+      "Transport Company",
+      "Restaurant",
+      "Healthcare",
+      "Retail",
+      "Manufacturing",
+      "Construction",
+      "Agriculture",
+      "Education",
+      "Real Estate",
+      "SaaS"
+    ]
+  },
+  {
+    category: "Software & Digital",
+    icon: Code2,
+    chip: "text-violet-600",
+    ring: "hover:border-violet-500/40",
+    roadmaps: ["Website", "Mobile App", "CRM", "ERP", "E-commerce", "Analytics", "AI Systems"]
+  },
+  {
+    category: "Technology",
+    icon: Cpu,
+    chip: "text-emerald-600",
+    ring: "hover:border-emerald-500/40",
+    roadmaps: [
+      "Frontend",
+      "Backend",
+      "Data Engineering",
+      "DevOps",
+      "Cloud",
+      "Cybersecurity",
+      "AI Engineering",
+      "UI/UX"
+    ]
+  }
+];
+
+const ICONS: Record<string, LucideIcon> = {
+  "Business Foundations": Building2,
+  Strategy: Target,
+  Finance: Landmark,
+  Marketing: Megaphone,
+  Sales: TrendingUp,
+  Operations: Cog,
+  "Human Resources": Users,
+  "Customer Success": HeartHandshake,
+  "Legal & Compliance": Scale,
+  Technology: Cpu,
+  "Transport Company": Truck,
+  Restaurant: UtensilsCrossed,
+  Healthcare: Stethoscope,
+  Retail: ShoppingBag,
+  Manufacturing: Factory,
+  Construction: HardHat,
+  Agriculture: Sprout,
+  Education: GraduationCap,
+  "Real Estate": Building,
+  SaaS: AppWindow,
+  Website: Globe,
+  "Mobile App": Smartphone,
+  CRM: Contact,
+  ERP: Network,
+  "E-commerce": ShoppingCart,
+  Analytics: BarChart3,
+  "AI Systems": Bot,
+  Frontend: LayoutDashboard,
+  Backend: Server,
+  "Data Engineering": Database,
+  DevOps: Infinity,
+  Cloud: Cloud,
+  Cybersecurity: ShieldCheck,
+  "AI Engineering": BrainCircuit,
+  "UI/UX": PenTool
+};
+
+const toSlug = (name: string) =>
+  name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+function RoadmapTile({ name, chip, ring }: { name: string; chip: string; ring: string }) {
+  const Icon = ICONS[name] ?? Milestone;
   return (
-    <Link href={roadmap.href}>
-      <Card className="h-full p-5 transition-shadow hover:shadow-flow-md">
-        <CardHeader className="p-0">
-          <div className="mb-1.5 flex items-center gap-2">
-            <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-              {roadmap.category}
-            </span>
-            <span className="text-xs text-muted-foreground">{roadmap.level}</span>
-          </div>
-          <CardTitle className="text-base">{roadmap.label}</CardTitle>
-          <CardDescription className="leading-relaxed">{roadmap.description}</CardDescription>
-        </CardHeader>
-
-        {roadmap.progress !== undefined && (
-          <div className="mt-4 flex items-center gap-2">
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
-              <div
-                className="h-full rounded-full bg-primary"
-                style={{ width: `${roadmap.progress}%` }}
-              />
-            </div>
-            <span className="text-xs text-muted-foreground">{roadmap.progress}%</span>
-          </div>
-        )}
-      </Card>
+    <Link
+      href={`/roadmaps/${toSlug(name)}`}
+      className={cn(
+        "group inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-all hover:-translate-y-0.5 hover:shadow-flow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        ring
+      )}
+    >
+      <Icon className={cn("h-4 w-4 shrink-0", chip)} />
+      <span className="truncate">{name}</span>
     </Link>
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="mb-10">
-      <h2 className="mb-4 text-lg font-semibold">{title}</h2>
-      {children}
-    </section>
-  );
-}
-
 export default function RoadmapsPage() {
-  const featured = ROADMAP_LINKS.filter((r) => r.featured);
-  const popular = ROADMAP_LINKS.filter((r) => r.popular);
-  const mine = ROADMAP_LINKS.filter((r) => r.progress !== undefined);
+  const total = CATALOG.reduce((n, g) => n + g.roadmaps.length, 0);
 
   return (
-    <AppShell
-      title="Find your path."
-      description="Structured routes from where you are to where you're going. Every milestone can become a project."
-    >
-      <Section title="Categories">
-        <div className="flex flex-wrap gap-2">
-          {ROADMAP_CATEGORIES.map((category) => {
-            const count = ROADMAP_LINKS.filter((r) => r.category === category).length;
-            return (
-              <span
-                key={category}
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3.5 py-1.5 text-sm text-foreground"
-              >
-                {category}
-                <span className="text-xs text-muted-foreground">{count > 0 ? count : "Soon"}</span>
+    <AppShell>
+      <section className="mx-auto max-w-2xl pt-10 text-center sm:pt-14">
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          Flow <span className="text-primary">Roadmaps</span>
+        </h1>
+        <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+          The business knowledge library — {total} structured roadmaps across {CATALOG.length}{" "}
+          categories. Browse and pick your path.
+        </p>
+      </section>
+
+      {CATALOG.map((group) => {
+        const HeaderIcon = group.icon;
+        return (
+          <section key={group.category} className="mt-14">
+            <div className="mb-6 flex items-center justify-center gap-2.5">
+              <HeaderIcon className={cn("h-5 w-5", group.chip)} />
+              <h2 className="text-lg font-bold tracking-tight text-foreground">{group.category}</h2>
+              <span className="text-sm font-medium text-muted-foreground">
+                {group.roadmaps.length}
               </span>
-            );
-          })}
-        </div>
-      </Section>
-
-      <Section title="Featured roadmaps">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((r) => (
-            <RoadmapCard key={r.href} roadmap={r} />
-          ))}
-        </div>
-      </Section>
-
-      <Section title="Popular roadmaps">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {popular.map((r) => (
-            <RoadmapCard key={r.href} roadmap={r} />
-          ))}
-        </div>
-      </Section>
-
-      <Section title="My roadmaps">
-        {mine.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {mine.map((r) => (
-              <RoadmapCard key={r.href} roadmap={r} />
-            ))}
-          </div>
-        ) : (
-          <Card className="border-dashed p-6">
-            <CardHeader className="p-0">
-              <CardTitle className="text-base text-muted-foreground">
-                No roadmaps started yet
-              </CardTitle>
-              <CardDescription>
-                Start one and it&rsquo;ll show up here with your progress.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        )}
-      </Section>
-
-      <div className="flex flex-wrap gap-3 border-t border-border pt-6">
-        <Button asChild>
-          <Link href="/roadmaps/business-101">Start a roadmap</Link>
-        </Button>
-        <Button variant="outline" asChild>
-          <Link href="/explore">Browse everything</Link>
-        </Button>
-      </div>
+            </div>
+            <div className="mx-auto flex max-w-3xl flex-wrap justify-center gap-2.5">
+              {group.roadmaps.map((name) => (
+                <RoadmapTile key={name} name={name} chip={group.chip} ring={group.ring} />
+              ))}
+            </div>
+          </section>
+        );
+      })}
     </AppShell>
   );
 }

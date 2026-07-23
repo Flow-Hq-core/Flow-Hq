@@ -55,6 +55,7 @@ export default function BusinessAIPage() {
             examples={EXAMPLES}
             ariaLabel="Ask Flow Business AI"
             fallbackPlaceholder="Describe your business problem…"
+            submitHref="/business-ai/chat"
           />
         </div>
       </section>

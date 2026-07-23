@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowUp, Sparkles } from "lucide-react";
 
 /**
@@ -55,15 +56,19 @@ export function PromptBox({
   phrases,
   examples,
   ariaLabel,
-  fallbackPlaceholder
+  fallbackPlaceholder,
+  submitHref
 }: {
   phrases: string[];
   examples: string[];
   ariaLabel: string;
   fallbackPlaceholder: string;
+  /** When set, submitting navigates to `${submitHref}?q=<message>`. */
+  submitHref?: string;
 }) {
   const [value, setValue] = useState("");
   const ref = useRef<HTMLTextAreaElement>(null);
+  const router = useRouter();
   const placeholder = useTypewriter(phrases, value.length > 0, fallbackPlaceholder);
 
   const fill = (text: string) => {
@@ -71,16 +76,33 @@ export function PromptBox({
     ref.current?.focus();
   };
 
+  const submit = () => {
+    const q = value.trim();
+    if (!q || !submitHref) return;
+    router.push(`${submitHref}?q=${encodeURIComponent(q)}`);
+  };
+
   return (
     <div className="w-full">
       <form
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={(e) => {
+          e.preventDefault();
+          submit();
+        }}
         className="relative rounded-2xl border border-input bg-background shadow-flow-sm transition-shadow focus-within:ring-2 focus-within:ring-ring"
       >
         <textarea
           ref={ref}
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => {
+            // Only hijack Enter where there's somewhere to submit to; elsewhere
+            // it stays a normal newline.
+            if (submitHref && e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              submit();
+            }
+          }}
           rows={2}
           placeholder={placeholder}
           className="w-full resize-none rounded-2xl bg-transparent px-4 py-3.5 pr-14 text-base outline-none placeholder:text-muted-foreground"

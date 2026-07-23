@@ -3,6 +3,9 @@ export type RStatus = "done" | "pending";
 export interface RNode {
   label: string;
   status: RStatus;
+  /** Prose shown in the node detail panel. Filled in from the roadmap content
+   *  doc; when absent the panel falls back to a status + breakdown summary. */
+  summary?: string;
   cluster?: { label: string; status: RStatus }[];
   children?: RNode[];
   sequential?: boolean;

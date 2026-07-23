@@ -3,6 +3,7 @@
  *   parent label -> horizontal trunk -> vertical sibling bus -> child label.
  * The bus's outer turns (first / last child) are drawn as bordered boxes so the
  * corner can be rounded; middle children tee off the bus with a straight stub.
+ * Horizontal spacing scales off --rm-gap (half the parent->child column gap).
  * Scoped module so it compiles reliably in dev (globals raw CSS didn't hot-
  * reload under Tailwind v4).
  */
@@ -15,8 +16,8 @@
 .tree {
   --rm-line: hsl(var(--border));
   --rm-line-faint: hsl(var(--border) / 0.5);
-  --rm-gap: 18px; /* half the parent -> child column gap below */
-  --rm-radius: 9px;
+  --rm-gap: 22px;
+  --rm-radius: 10px;
   font-size: 13px;
   line-height: 1.2;
 }
@@ -30,19 +31,19 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 36px;
+  margin-left: calc(var(--rm-gap) * 2);
 }
 /* Vertical padding spaces siblings apart; it lands inside the li so the
    vertical bus stays a continuous line across siblings. */
 .tree li > ul > li {
-  padding: 7px 0;
+  padding: 9px 0;
 }
 
 /* parent label -> vertical bus (trunk) */
 .tree li > ul::before {
   content: "";
   position: absolute;
-  left: -36px;
+  left: calc(var(--rm-gap) * -2);
   top: 50%;
   width: var(--rm-gap);
   height: 1px;
@@ -53,7 +54,7 @@
 .tree li > ul > li::before {
   content: "";
   position: absolute;
-  left: calc(-1 * var(--rm-gap));
+  left: calc(var(--rm-gap) * -1);
   top: 50%;
   width: var(--rm-gap);
   height: 1px;
@@ -62,7 +63,7 @@
 .tree li > ul > li::after {
   content: "";
   position: absolute;
-  left: calc(-1 * var(--rm-gap));
+  left: calc(var(--rm-gap) * -1);
   top: 0;
   bottom: 0;
   width: 1px;
@@ -120,19 +121,28 @@
   border-color: var(--rm-line-faint);
 }
 
-/* Outlined pill: thin stroke, no fill. */
+/* Outlined pill button: thin stroke, no fill. */
 .lbl {
   white-space: nowrap;
+  cursor: pointer;
   padding: 5px 13px;
   border: 1px solid var(--rm-line);
   border-radius: 9999px;
   background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.2;
   font-weight: 500;
   color: hsl(var(--foreground));
-  transition: border-color 0.15s, color 0.15s;
+  transition: border-color 0.15s, color 0.15s, box-shadow 0.15s;
 }
 .lbl:hover {
   border-color: hsl(var(--muted-foreground));
+}
+.lbl:focus-visible {
+  outline: none;
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25);
 }
 /* Pending node: lighter dashed stroke + muted text. */
 .pending {

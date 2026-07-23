@@ -23,15 +23,20 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 28px;
+  margin-left: 36px;
+}
+/* Vertical padding spaces siblings apart; it lands inside the li so the
+   vertical bus (::after, top:0->bottom:0) stays a continuous line. */
+.tree li > ul > li {
+  padding: 7px 0;
 }
 /* parent label -> sibling bus */
 .tree li > ul::before {
   content: "";
   position: absolute;
-  left: -28px;
+  left: -36px;
   top: 50%;
-  width: 14px;
+  width: 18px;
   height: 1px;
   background: hsl(var(--border));
 }
@@ -39,9 +44,9 @@
 .tree li > ul > li::before {
   content: "";
   position: absolute;
-  left: -14px;
+  left: -18px;
   top: 50%;
-  width: 14px;
+  width: 18px;
   height: 1px;
   background: hsl(var(--border));
 }
@@ -49,7 +54,7 @@
 .tree li > ul > li::after {
   content: "";
   position: absolute;
-  left: -14px;
+  left: -18px;
   top: 0;
   bottom: 0;
   width: 1px;
@@ -64,16 +69,19 @@
 .tree li > ul > li:only-child::after {
   display: none;
 }
+/* Outlined pill: thin stroke, no fill. */
 .lbl {
   white-space: nowrap;
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 5px 13px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 9999px;
+  background: transparent;
   font-weight: 500;
   color: hsl(var(--foreground));
-  transition: background-color 0.15s;
+  transition: border-color 0.15s, color 0.15s;
 }
 .lbl:hover {
-  background: hsl(var(--muted));
+  border-color: hsl(var(--muted-foreground));
 }
 .pending {
   color: hsl(var(--muted-foreground));

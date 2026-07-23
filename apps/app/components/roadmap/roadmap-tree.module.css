@@ -1,7 +1,11 @@
 /*
- * Left-to-right connector tree: parent label -> vertical sibling bus ->
- * horizontal stub -> child label. Scoped module so it compiles reliably in
- * dev (globals.css raw CSS didn't hot-reload under Tailwind v4).
+ * Left-to-right connector tree with rounded elbows. Flow:
+ *   parent label -> horizontal trunk -> vertical sibling bus -> child label.
+ * The bus's outer turns (first / last child) are drawn as bordered boxes so the
+ * corner can be rounded; middle children tee off the bus with a straight stub.
+ * Horizontal spacing scales off --rm-gap (half the parent->child column gap).
+ * Scoped module so it compiles reliably in dev (globals raw CSS didn't hot-
+ * reload under Tailwind v4).
  */
 .tree,
 .tree ul {
@@ -10,6 +14,10 @@
   padding: 0;
 }
 .tree {
+  --rm-line: hsl(var(--border));
+  --rm-line-faint: hsl(var(--border) / 0.5);
+  --rm-gap: 22px;
+  --rm-radius: 10px;
   font-size: 13px;
   line-height: 1.2;
 }
@@ -23,63 +31,129 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 28px;
+  margin-left: calc(var(--rm-gap) * 2);
 }
-/* parent label -> sibling bus */
+/* Vertical padding spaces siblings apart; it lands inside the li so the
+   vertical bus stays a continuous line across siblings. */
+.tree li > ul > li {
+  padding: 9px 0;
+}
+
+/* parent label -> vertical bus (trunk) */
 .tree li > ul::before {
   content: "";
   position: absolute;
-  left: -28px;
+  left: calc(var(--rm-gap) * -2);
   top: 50%;
-  width: 14px;
+  width: var(--rm-gap);
   height: 1px;
-  background: hsl(var(--border));
+  background: var(--rm-line);
 }
-/* bus -> each child */
+
+/* Middle children: straight tee — horizontal stub + full-height vertical bus. */
 .tree li > ul > li::before {
   content: "";
   position: absolute;
-  left: -14px;
+  left: calc(var(--rm-gap) * -1);
   top: 50%;
-  width: 14px;
+  width: var(--rm-gap);
   height: 1px;
-  background: hsl(var(--border));
+  background: var(--rm-line);
 }
-/* vertical sibling bus */
 .tree li > ul > li::after {
   content: "";
   position: absolute;
-  left: -14px;
+  left: calc(var(--rm-gap) * -1);
   top: 0;
   bottom: 0;
   width: 1px;
-  background: hsl(var(--border));
+  background: var(--rm-line);
+}
+
+/* First child: rounded top-left elbow (bus runs down, stub runs right). */
+.tree li > ul > li:first-child::before {
+  display: none;
 }
 .tree li > ul > li:first-child::after {
   top: 50%;
+  bottom: 0;
+  width: var(--rm-gap);
+  height: auto;
+  background: none;
+  border-left: 1px solid var(--rm-line);
+  border-top: 1px solid var(--rm-line);
+  border-top-left-radius: var(--rm-radius);
+}
+
+/* Last child: rounded bottom-left elbow (bus runs up, stub runs right). */
+.tree li > ul > li:last-child::before {
+  display: none;
 }
 .tree li > ul > li:last-child::after {
+  top: 0;
   bottom: 50%;
+  width: var(--rm-gap);
+  height: auto;
+  background: none;
+  border-left: 1px solid var(--rm-line);
+  border-bottom: 1px solid var(--rm-line);
+  border-bottom-left-radius: var(--rm-radius);
+}
+
+/* Single child: one straight line, no bus or corner. Ordered after the
+   first/last rules so it wins for a node that is both. */
+.tree li > ul > li:only-child::before {
+  display: block;
 }
 .tree li > ul > li:only-child::after {
   display: none;
 }
+
+/* Pending: fade the branch leading to this node. Straight segments are filled
+   (background); the elbow boxes are drawn with borders, so fade those instead. */
+.tree li > ul > li[data-status="pending"]::before,
+.tree li > ul > li[data-status="pending"]::after {
+  background: var(--rm-line-faint);
+}
+.tree li > ul > li[data-status="pending"]:first-child::after,
+.tree li > ul > li[data-status="pending"]:last-child::after {
+  background: none;
+  border-color: var(--rm-line-faint);
+}
+
+/* Outlined pill button: thin stroke, no fill. */
 .lbl {
   white-space: nowrap;
-  padding: 4px 10px;
-  border-radius: 6px;
+  cursor: pointer;
+  padding: 5px 13px;
+  border: 1px solid var(--rm-line);
+  border-radius: 9999px;
+  background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.2;
   font-weight: 500;
   color: hsl(var(--foreground));
-  transition: background-color 0.15s;
+  transition: border-color 0.15s, color 0.15s, box-shadow 0.15s;
 }
 .lbl:hover {
-  background: hsl(var(--muted));
+  border-color: hsl(var(--muted-foreground));
 }
+.lbl:focus-visible {
+  outline: none;
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25);
+}
+/* Pending node: lighter dashed stroke + muted text. */
 .pending {
+  border-style: dashed;
+  border-color: var(--rm-line-faint);
   color: hsl(var(--muted-foreground));
   font-weight: 400;
 }
+/* Root: heaviest emphasis, still monochrome (no color tint). */
 .root {
   font-weight: 700;
-  color: hsl(var(--primary));
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--muted-foreground));
 }

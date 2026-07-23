@@ -28,22 +28,24 @@ export function RoadmapTemplate({
         All Roadmaps
       </Link>
 
-      <div className="mb-8">
-        <p
-          className={cn(
-            "mb-2 text-sm font-semibold uppercase tracking-wider",
-            categoryColor ?? "text-primary"
-          )}
-        >
-          {category}
-        </p>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{title}</h1>
-        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          {description}
-        </p>
-      </div>
+      <div className="rounded-2xl border border-border bg-card p-6 shadow-flow-sm sm:p-10">
+        <div className="mb-10 text-center">
+          <p
+            className={cn(
+              "mb-2 text-sm font-semibold uppercase tracking-wider",
+              categoryColor ?? "text-primary"
+            )}
+          >
+            {category}
+          </p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{title}</h1>
+          <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {description}
+          </p>
+        </div>
 
-      <RoadmapTree root={root} />
+        <RoadmapTree root={root} />
+      </div>
     </AppShell>
   );
 }

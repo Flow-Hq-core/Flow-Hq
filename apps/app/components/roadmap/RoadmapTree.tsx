@@ -3,14 +3,8 @@
 import { useState } from "react";
 import { CheckCircle2, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { RNode, RStatus } from "@/data/businessRoadmap";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle
-} from "@/components/ui/sheet";
+import type { RNode } from "@/data/businessRoadmap";
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import styles from "./roadmap-tree.module.css";
 
 /** A node's children — either real children or a flat `cluster` of leaves. */
@@ -50,52 +44,68 @@ function TreeNode({
   );
 }
 
-function StatusBadge({ status }: { status: RStatus }) {
-  const done = status === "done";
-  return (
-    <span
-      className={cn(
-        "inline-flex w-fit items-center gap-1.5 self-start rounded-full border px-2.5 py-0.5 text-xs font-medium",
-        done
-          ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600"
-          : "border-border bg-muted/50 text-muted-foreground"
-      )}
-    >
-      <span className={cn("h-1.5 w-1.5 rounded-full", done ? "bg-emerald-500" : "bg-muted-foreground/50")} />
-      {done ? "Complete" : "In progress"}
-    </span>
-  );
-}
+/** roadmap.sh-style status control. Local to the panel — not persisted yet (no
+ *  progress backend), initialised from the node's status in the data. */
+const STATUS_OPTIONS = [
+  { key: "pending", label: "Pending" },
+  { key: "in-progress", label: "In Progress" },
+  { key: "done", label: "Done" },
+  { key: "skip", label: "Skip" }
+] as const;
 
-/** The side-panel body for a clicked node. Shows status + a breakdown built from
- *  the node's own children; renders `summary` prose when the data provides it. */
+const ACTIVE_STATUS: Record<string, string> = {
+  pending: "border-transparent bg-muted text-foreground",
+  "in-progress": "border-transparent bg-amber-500/15 text-amber-600",
+  done: "border-transparent bg-emerald-500/15 text-emerald-600",
+  skip: "border-transparent bg-muted text-muted-foreground"
+};
+
+/** The side-panel body for a clicked node, modelled on the roadmap.sh topic
+ *  drawer: title, a status control, a description, then a resource-style list
+ *  built from the node's sub-topics. Shows `summary` prose when data provides it. */
 function NodeDetails({ node }: { node: RNode }) {
   const kids = childrenOf(node);
-  const doneCount = kids.filter((k) => k.status === "done").length;
+  const [status, setStatus] = useState<string>(node.status === "done" ? "done" : "pending");
 
   return (
     <div>
-      <SheetHeader className="pr-8 text-left">
-        <StatusBadge status={node.status} />
-        <SheetTitle className="text-xl">{node.label}</SheetTitle>
-        <SheetDescription>
-          {node.summary ??
-            (kids.length > 0
-              ? `${doneCount} of ${kids.length} ${kids.length === 1 ? "topic" : "topics"} complete.`
-              : "A single milestone in this roadmap.")}
-        </SheetDescription>
-      </SheetHeader>
+      <SheetTitle className="text-2xl font-bold text-foreground">{node.label}</SheetTitle>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {STATUS_OPTIONS.map((opt) => (
+          <button
+            key={opt.key}
+            type="button"
+            onClick={() => setStatus(opt.key)}
+            className={cn(
+              "rounded-md border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              status === opt.key
+                ? ACTIVE_STATUS[opt.key]
+                : "border-border text-muted-foreground hover:bg-muted/50"
+            )}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+
+      <SheetDescription className="mt-5 text-sm leading-relaxed text-muted-foreground">
+        {node.summary ??
+          (kids.length > 0
+            ? `This area breaks down into ${kids.length} ${kids.length === 1 ? "topic" : "topics"}.`
+            : "A single milestone in this roadmap.")}
+      </SheetDescription>
 
       {kids.length > 0 && (
         <div className="mt-6">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Breakdown
-          </p>
-          <ul className="space-y-1.5">
+          </h3>
+          <ul className="space-y-2">
             {kids.map((k) => (
               <li
                 key={k.label}
-                className="flex items-center gap-2.5 rounded-lg border border-border/70 px-3 py-2 text-sm"
+                className="flex items-center gap-2.5 rounded-lg border border-border/70 bg-muted/20 px-3 py-2.5 text-sm"
               >
                 {k.status === "done" ? (
                   <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
@@ -114,8 +124,9 @@ function NodeDetails({ node }: { node: RNode }) {
 
 /**
  * Renders a roadmap node as a left-to-right connector tree (see
- * roadmap-tree.module.css). Each node is a button that opens a right-side sheet
- * with its details. Scrolls horizontally when wider than the viewport.
+ * roadmap-tree.module.css), centered when it fits and scrollable when wider than
+ * the viewport. Each node is a button that opens a right-side sheet with its
+ * details.
  */
 export function RoadmapTree({ root }: { root: RNode }) {
   const [selected, setSelected] = useState<RNode | null>(null);
@@ -123,9 +134,13 @@ export function RoadmapTree({ root }: { root: RNode }) {
   return (
     <>
       <div className="overflow-x-auto pb-4">
-        <ul className={styles.tree}>
-          <TreeNode node={root} root onSelect={setSelected} />
-        </ul>
+        {/* safe center: centered when it fits, start-aligned (fully scrollable)
+            when it overflows, so the left edge never gets clipped. */}
+        <div className="flex [justify-content:safe_center]">
+          <ul className={styles.tree}>
+            <TreeNode node={root} root onSelect={setSelected} />
+          </ul>
+        </div>
       </div>
 
       <Sheet
@@ -135,7 +150,7 @@ export function RoadmapTree({ root }: { root: RNode }) {
         }}
       >
         <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-md">
-          {selected && <NodeDetails node={selected} />}
+          {selected && <NodeDetails key={selected.label} node={selected} />}
         </SheetContent>
       </Sheet>
     </>

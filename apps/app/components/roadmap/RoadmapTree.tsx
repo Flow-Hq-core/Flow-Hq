@@ -50,9 +50,9 @@ function depthStyle(depth: number): string {
   return styles.node;
 }
 function iconSize(depth: number): string {
-  if (depth <= 1) return "h-5 w-5";
-  if (depth === 2) return "h-4 w-4";
-  return "h-3.5 w-3.5";
+  if (depth <= 1) return "h-4 w-4";
+  if (depth === 2) return "h-3.5 w-3.5";
+  return "h-3 w-3";
 }
 
 function TreeNode({

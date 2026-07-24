@@ -1,4 +1,12 @@
-export type RStatus = "done" | "pending";
+/** Node states. `done`/`pending` are the baseline the data currently uses;
+ *  the rest are the richer roadmap states (rendered when a node opts in). */
+export type RStatus =
+  | "done"
+  | "pending"
+  | "current"
+  | "locked"
+  | "recommended"
+  | "ai-suggested";
 
 export interface RNode {
   label: string;

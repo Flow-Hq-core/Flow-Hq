@@ -1,9 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Circle } from "lucide-react";
+import {
+  Check,
+  CheckCircle2,
+  Circle,
+  CircleDot,
+  Lock,
+  Sparkles,
+  Star,
+  type LucideIcon
+} from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { RNode } from "@/data/businessRoadmap";
+import type { RNode, RStatus } from "@/data/businessRoadmap";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import styles from "./roadmap-tree.module.css";
 
@@ -14,29 +23,76 @@ function childrenOf(node: RNode): RNode[] {
   return [];
 }
 
+/** Status marker shown inside a pill. `pending` is the unmarked baseline. */
+const STATUS_META: Record<RStatus, { icon: LucideIcon | null; className: string }> = {
+  done: { icon: Check, className: "text-emerald-600" },
+  current: { icon: CircleDot, className: "text-primary" },
+  recommended: { icon: Star, className: "text-amber-500" },
+  "ai-suggested": { icon: Sparkles, className: "text-violet-500" },
+  locked: { icon: Lock, className: "text-muted-foreground" },
+  pending: { icon: null, className: "" }
+};
+
+/** Extra pill treatment for states that change the whole pill, not just the icon. */
+const STATUS_PILL: Partial<Record<RStatus, string>> = {
+  current: "ring-2 ring-primary/40",
+  locked: "opacity-60"
+};
+
+/** Number of branch hue classes (h0..hN-1) defined in the CSS module. */
+const BRANCH_COUNT = 10;
+
+/** depth 0 = root, 1 = category (24/bold), 2 = topic (18/semibold), 3+ = node (14/medium). */
+function depthStyle(depth: number): string {
+  if (depth === 0) return styles.root;
+  if (depth === 1) return styles.category;
+  if (depth === 2) return styles.topic;
+  return styles.node;
+}
+function iconSize(depth: number): string {
+  if (depth <= 1) return "h-5 w-5";
+  if (depth === 2) return "h-4 w-4";
+  return "h-3.5 w-3.5";
+}
+
 function TreeNode({
   node,
-  root = false,
+  depth,
+  branchIndex,
   onSelect
 }: {
   node: RNode;
-  root?: boolean;
+  depth: number;
+  branchIndex: number;
   onSelect: (node: RNode) => void;
 }) {
   const kids = childrenOf(node);
+  const meta = STATUS_META[node.status];
+  const Icon = meta.icon;
+  // A depth-1 node starts a branch: tag it with a hue class whose --rm-h every
+  // descendant pill inherits (a lighter shade the deeper it goes).
+  const hueClass = depth === 1 ? styles[`h${branchIndex % BRANCH_COUNT}`] : undefined;
+
   return (
-    <li data-status={node.status}>
+    <li data-status={node.status} className={hueClass}>
       <button
         type="button"
         onClick={() => onSelect(node)}
-        className={cn(styles.lbl, root && styles.root, node.status === "pending" && styles.pending)}
+        className={cn(styles.lbl, depthStyle(depth), STATUS_PILL[node.status])}
       >
+        {Icon && <Icon className={cn("shrink-0", iconSize(depth), meta.className)} />}
         {node.label}
       </button>
       {kids.length > 0 && (
         <ul>
-          {kids.map((child) => (
-            <TreeNode key={child.label} node={child} onSelect={onSelect} />
+          {kids.map((child, i) => (
+            <TreeNode
+              key={child.label}
+              node={child}
+              depth={depth + 1}
+              branchIndex={depth === 0 ? i : branchIndex}
+              onSelect={onSelect}
+            />
           ))}
         </ul>
       )}
@@ -44,7 +100,35 @@ function TreeNode({
   );
 }
 
-/** roadmap.sh-style status control. Local to the panel — not persisted yet (no
+/** The status key under the tree — makes the state vocabulary legible. */
+const LEGEND: { status: RStatus; label: string }[] = [
+  { status: "done", label: "Completed" },
+  { status: "current", label: "Current" },
+  { status: "recommended", label: "Recommended" },
+  { status: "ai-suggested", label: "AI Suggested" },
+  { status: "locked", label: "Locked" }
+];
+
+function Legend() {
+  return (
+    <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+      {LEGEND.map(({ status, label }) => {
+        const { icon: Icon, className } = STATUS_META[status];
+        return (
+          <span
+            key={status}
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground"
+          >
+            {Icon && <Icon className={cn("h-3.5 w-3.5", className)} />}
+            {label}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+/** roadmap.sh-style status control inside the panel. Local-only for now (no
  *  progress backend), initialised from the node's status in the data. */
 const STATUS_OPTIONS = [
   { key: "pending", label: "Pending" },
@@ -61,8 +145,8 @@ const ACTIVE_STATUS: Record<string, string> = {
 };
 
 /** The side-panel body for a clicked node, modelled on the roadmap.sh topic
- *  drawer: title, a status control, a description, then a resource-style list
- *  built from the node's sub-topics. Shows `summary` prose when data provides it. */
+ *  drawer: title, a status control, a description, then a breakdown of the
+ *  node's sub-topics. Shows `summary` prose when the data provides it. */
 function NodeDetails({ node }: { node: RNode }) {
   const kids = childrenOf(node);
   const [status, setStatus] = useState<string>(node.status === "done" ? "done" : "pending");
@@ -112,7 +196,7 @@ function NodeDetails({ node }: { node: RNode }) {
                 ) : (
                   <Circle className="h-4 w-4 shrink-0 text-muted-foreground/40" />
                 )}
-                <span className={cn(k.status === "pending" && "text-muted-foreground")}>{k.label}</span>
+                <span className={cn(k.status !== "done" && "text-muted-foreground")}>{k.label}</span>
               </li>
             ))}
           </ul>
@@ -125,8 +209,8 @@ function NodeDetails({ node }: { node: RNode }) {
 /**
  * Renders a roadmap node as a left-to-right connector tree (see
  * roadmap-tree.module.css), centered when it fits and scrollable when wider than
- * the viewport. Each node is a button that opens a right-side sheet with its
- * details.
+ * the viewport. Nodes are sized by depth, tinted by branch, and marked by
+ * status; each opens a right-side sheet with its details.
  */
 export function RoadmapTree({ root }: { root: RNode }) {
   const [selected, setSelected] = useState<RNode | null>(null);
@@ -138,10 +222,12 @@ export function RoadmapTree({ root }: { root: RNode }) {
             when it overflows, so the left edge never gets clipped. */}
         <div className="flex [justify-content:safe_center]">
           <ul className={styles.tree}>
-            <TreeNode node={root} root onSelect={setSelected} />
+            <TreeNode node={root} depth={0} branchIndex={0} onSelect={setSelected} />
           </ul>
         </div>
       </div>
+
+      <Legend />
 
       <Sheet
         open={selected !== null}
